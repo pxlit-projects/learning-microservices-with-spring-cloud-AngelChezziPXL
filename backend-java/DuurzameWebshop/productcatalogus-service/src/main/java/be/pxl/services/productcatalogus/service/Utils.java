@@ -5,7 +5,7 @@ import be.pxl.services.productcatalogus.domain.dto.ProductRequest;
 import be.pxl.services.productcatalogus.domain.dto.ProductResponse;
 
 public class Utils {
-    public ProductResponse mapProductToProductResponse(Product product) {
+    public static ProductResponse mapProductToProductResponse(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -14,11 +14,14 @@ public class Utils {
                 .build();
     }
 
-    public Product mapProductRequestToProduct(ProductRequest productRequest) {
+    public static Product mapProductRequestToProduct(ProductRequest productRequest) {
         return Product.builder()
                 .name(productRequest.getName())
                 .description(productRequest.getDescription())
                 .price(productRequest.getPrice())
                 .build();
     }
+
+    //TODO: mappers voor category
+    //TODO: mappers voor tag
 }

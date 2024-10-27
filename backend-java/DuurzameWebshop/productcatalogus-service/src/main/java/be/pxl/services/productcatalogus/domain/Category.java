@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -14,18 +13,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String description;
-    private BigDecimal price;
-    private boolean available;
 
-    @ManyToOne
-    private Category category;
-
-    @ManyToMany
-    List<Tag> tags;
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
 }
