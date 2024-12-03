@@ -9,6 +9,6 @@ public interface IProductService {
 
     void updateProduct(Long id, ProductRequest productRequest);
 
-    void updateProductCategory(Long productId, Long categoryId)
+    void updateProductCategory(Long productId, Long categoryId);
     void addTagsToProduct(Long productId, List<String> tagNames);
 }
