@@ -1,0 +1,36 @@
+name: java_mysql
+
+services:
+    
+    java_mysql_exam:
+        image: mysql:8.3
+        container_name: java_mysql_exam_container
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: "root"
+            MYSQL_USER: "user"
+            MYSQL_PASSWORD: "password"
+            #MYSQL_DATABASE: "employeeservice_db"               databases will be created by the init.sql script
+        networks: 
+            - java_exam_network
+        volumes:
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+            - java_mysql_exam_volume:/var/lib/mysql
+        
+    phpmyadmin_java_exam:
+        image: phpmyadmin
+        container_name: java_phpmyadmin_exam_container
+        ports:
+            - "8085:80"
+        environment:
+            PMA_HOST: java_mysql_exam_container
+        networks:
+            - java_exam_network
+
+networks:
+    java_exam_network:
+
+volumes:
+    java_mysql_exam_volume:
+        name: "java_mysql_exam_volume"
