@@ -7,8 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
+@Table(name="tag")
 @Data
 @Builder
 @NoArgsConstructor
@@ -21,4 +23,37 @@ public class Tag {
 
     @ManyToMany(mappedBy="tags")
     List<Product> products;
+
+    // helper methods
+    public void addProduct(Product product) {
+        if (!products.contains(product)) {
+            products.add(product);
+            product.getTags().add(this);
+        }
+    }
+
+    public void removeProduct(Product product) {
+        if (products.contains(product)) {
+            products.remove(product);
+            product.getTags().remove(this);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true; // Reference equality
+        if (o == null || getClass() != o.getClass()) return false; // Type check
+
+        Tag tag = (Tag) o;
+
+        // Check equality based on ID if it is set
+        return id != null && id.equals(tag.id);
+    }
+
+    @Override
+    public int hashCode() {
+        // Hash based on ID if it is set; otherwise, hash the default identity
+        return id != null ? id.hashCode() : super.hashCode();
+    }
 }
+

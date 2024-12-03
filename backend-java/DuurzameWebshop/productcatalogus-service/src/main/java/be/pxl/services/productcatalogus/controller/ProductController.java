@@ -1,26 +1,48 @@
 package be.pxl.services.productcatalogus.controller;
 
+import be.pxl.services.productcatalogus.domain.dto.CategoryRequest;
 import be.pxl.services.productcatalogus.domain.dto.ProductRequest;
+import be.pxl.services.productcatalogus.service.ICategoryService;
 import be.pxl.services.productcatalogus.service.IProductService;
+import be.pxl.services.productcatalogus.service.Utils;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
 public class ProductController {
-    IProductService productService;
+    private final IProductService productService;
+    private final ICategoryService categoryService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody ProductRequest productRequest) {
+    public void createProduct(@Valid @RequestBody ProductRequest productRequest) {
         productService.addProduct(productRequest);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+    public void updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
+    }
+
+    @PatchMapping("/{id}/category")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequest categoryRequest) {
+
+
+    }
+
+    @PostMapping("{id}/tag")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addTagsToProduct(@PathVariable Long id, @RequestBody String tagNamesString) {
+        List<String> tagsNames = Utils.convertInputStringToListOfStrings(tagNamesString);
+        productService.addTagsToProduct(id, tagsNames);
+
     }
 }

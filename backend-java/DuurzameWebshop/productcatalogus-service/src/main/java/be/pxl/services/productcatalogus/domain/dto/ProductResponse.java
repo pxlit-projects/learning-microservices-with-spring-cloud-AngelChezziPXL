@@ -1,5 +1,6 @@
 package be.pxl.services.productcatalogus.domain.dto;
 
+import be.pxl.services.productcatalogus.domain.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +16,6 @@ public class ProductResponse {
     private Long id;
     private String name;
     private String description;
+    private Category category;
     private BigDecimal price;
 }
