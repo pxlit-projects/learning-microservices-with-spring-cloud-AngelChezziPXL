@@ -7,7 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="product")
@@ -22,7 +25,7 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
-    private boolean available;
+    private boolean available = true;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -34,7 +37,7 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    List<Tag> tags;
+    private List<Tag> tags = new ArrayList<>();
 
     public void setCategory(Category category) {
         this.category = category;
@@ -45,9 +48,12 @@ public class Product {
 
     // helper methods
     public void addTag(Tag tag) {
+        if(this.tags == null){
+            this.tags = new ArrayList<>();
+        }
         if (!tags.contains(tag)) {
             tags.add(tag);
-            tag.getProducts().add(this);
+            tag.getProducts().add(this);    // Synchronize bidirectional relationship
         }
     }
 

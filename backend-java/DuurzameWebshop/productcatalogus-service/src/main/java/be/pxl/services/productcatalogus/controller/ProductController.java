@@ -1,10 +1,11 @@
 package be.pxl.services.productcatalogus.controller;
 
+import be.pxl.services.productcatalogus.domain.Utils.TagHelperMethods;
 import be.pxl.services.productcatalogus.domain.dto.CategoryRequest;
 import be.pxl.services.productcatalogus.domain.dto.ProductRequest;
-import be.pxl.services.productcatalogus.service.ICategoryService;
+import be.pxl.services.productcatalogus.domain.dto.ProductResponse;
+import be.pxl.services.productcatalogus.domain.dto.TagRequest;
 import be.pxl.services.productcatalogus.service.IProductService;
-import be.pxl.services.productcatalogus.service.Utils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
     private final IProductService productService;
-    private final ICategoryService categoryService;
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> getAllProducts() {
+        return productService.findAll();
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -31,18 +37,16 @@ public class ProductController {
         productService.updateProduct(id, productRequest);
     }
 
-    @PatchMapping("/{id}/category")
+    @PostMapping("/{id}/category")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequest categoryRequest) {
-
-
+    public void setCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequest categoryRequest) {
+        productService.setCategory(id, categoryRequest);
     }
 
     @PostMapping("{id}/tag")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addTagsToProduct(@PathVariable Long id, @RequestBody String tagNamesString) {
-        List<String> tagsNames = Utils.convertInputStringToListOfStrings(tagNamesString);
+    public void addTagsToProduct(@PathVariable Long id, @RequestBody TagRequest tagRequest) {
+        List<String> tagsNames = TagHelperMethods.convertInputStringToListOfStrings(tagRequest.getTags());
         productService.addTagsToProduct(id, tagsNames);
-
     }
 }

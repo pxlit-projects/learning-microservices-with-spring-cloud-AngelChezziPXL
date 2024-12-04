@@ -6,8 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name="tag")
@@ -19,16 +18,19 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
+    private String text;
 
     @ManyToMany(mappedBy="tags")
-    List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
     // helper methods
     public void addProduct(Product product) {
+        if(products == null) {
+            products = new ArrayList<>();
+        }
         if (!products.contains(product)) {
             products.add(product);
-            product.getTags().add(this);
+            product.getTags().add(this);    // Synchronize bidirectional relationship
         }
     }
 
