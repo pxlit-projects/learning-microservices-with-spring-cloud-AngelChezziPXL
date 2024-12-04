@@ -1,7 +1,10 @@
 package be.pxl.services.productcatalogus.domain.Exceptions;
 
-public class InvalidProductException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+public class InvalidProductException extends ResponseStatusException {
     public InvalidProductException(String message) {
-        super(message);
+        super(HttpStatus.BAD_REQUEST, message);
     }
 }

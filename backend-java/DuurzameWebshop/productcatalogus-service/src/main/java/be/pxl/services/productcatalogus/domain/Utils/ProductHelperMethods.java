@@ -1,23 +1,21 @@
-package be.pxl.services.productcatalogus.service;
+package be.pxl.services.productcatalogus.domain.Utils;
 
 import be.pxl.services.productcatalogus.domain.Product;
-import be.pxl.services.productcatalogus.domain.Tag;
 import be.pxl.services.productcatalogus.domain.dto.ProductRequest;
 import be.pxl.services.productcatalogus.domain.dto.ProductResponse;
-import jakarta.validation.constraints.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Utils {
+public class ProductHelperMethods {
     public static ProductResponse mapProductToProductResponse(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .description(product.getDescription())
+                .tags(product.getTags().stream()
+                        .map(TagHelperMethods::mapTagToTagRecord)
+                        .toList())
                 .price(product.getPrice())
                 .build();
     }
@@ -30,15 +28,11 @@ public class Utils {
                 .build();
     }
 
-    public static List<String> convertInputStringToListOfStrings(String tags) {
-        return Arrays.stream(tags.split(","))     // Split string by commas into stream
-                .map(String::trim)                      // Trim white space for each tag
-                .filter(tag -> !tag.isEmpty())      // Filter out empty tags
-                .collect(Collectors.toList());           // Collect the result into a list
+    public static List<ProductResponse> mapProductListToProductResponseList(List<Product> productList) {
+        return productList.stream()
+                .map(ProductHelperMethods::mapProductToProductResponse)
+                .collect(Collectors.toList());
     }
 
 
-
-    //TODO: mappers voor category
-    //TODO: mappers voor tag
 }

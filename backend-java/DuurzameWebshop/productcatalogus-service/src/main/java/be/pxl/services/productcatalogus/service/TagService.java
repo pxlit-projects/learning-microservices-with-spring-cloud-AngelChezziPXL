@@ -3,7 +3,6 @@ package be.pxl.services.productcatalogus.service;
 import be.pxl.services.productcatalogus.domain.Tag;
 import be.pxl.services.productcatalogus.repository.TagRepository;
 import lombok.AllArgsConstructor;
-import org.hibernate.annotations.SecondaryRow;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public class TagService implements ITagService {
     public void addTag(String tagName) {
         if (!tagNameExists(tagName)) {
             Tag tag = Tag.builder()
-                    .name(tagName)
+                    .text(tagName)
                     .build();
             tagRepository.save(tag);
         }
@@ -42,8 +41,13 @@ public class TagService implements ITagService {
     @Override
     public boolean tagNameExists(String tagName) {
         Tag tag = tagRepository.findAll().stream()
-                .filter(t -> t.getName().equals(tagName))
+                .filter(t -> t.getText().equals(tagName))
                 .findFirst().orElse(null);
         return tag != null;
+    }
+
+    @Override
+    public void updateTag(Tag tag) {
+
     }
 }

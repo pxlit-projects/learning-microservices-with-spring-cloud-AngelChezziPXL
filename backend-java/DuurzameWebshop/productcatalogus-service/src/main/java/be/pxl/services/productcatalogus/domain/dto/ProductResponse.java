@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -17,5 +19,6 @@ public class ProductResponse {
     private String name;
     private String description;
     private Category category;
+    private List<TagRecord> tags = new ArrayList<>();
     private BigDecimal price;
 }
