@@ -33,7 +33,7 @@ public class CategoryController {
         categoryService.addCategory(categoryRequest);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void updateCategoryName(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
         String categoryName = categoryRequest.getCategoryName().trim().toLowerCase();

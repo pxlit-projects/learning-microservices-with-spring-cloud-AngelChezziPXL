@@ -1,9 +1,7 @@
 package be.pxl.services.productcatalogus.controller;
 
-import be.pxl.services.productcatalogus.domain.Utils.TagHelperMethods;
 import be.pxl.services.productcatalogus.domain.dto.ProductRequest;
 import be.pxl.services.productcatalogus.domain.dto.ProductResponse;
-import be.pxl.services.productcatalogus.domain.dto.TagRequest;
 import be.pxl.services.productcatalogus.service.IProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,29 +22,27 @@ public class ProductController {
         return productService.findAll();
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductResponse getProductById(@PathVariable Long id) {
+        return productService.findById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createProduct(@Valid @RequestBody ProductRequest productRequest) {
         productService.addProduct(productRequest);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
     }
 
-    @PutMapping("/{productId}/category/{categoryId}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateCategory(@PathVariable Long productId, @Valid @PathVariable Long categoryId) {
-        productService.updateProductCategory(productId, categoryId);
-    }
-
-
-    @PostMapping("{id}/tag")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addTagsToProduct(@PathVariable Long id, @RequestBody TagRequest tagRequest) {
-        List<String> tagsNames = TagHelperMethods.convertTagsStringToTagStringList(tagRequest.getTags());
-        productService.addTagsToProduct(id, tagsNames);
+    public void deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
     }
 }

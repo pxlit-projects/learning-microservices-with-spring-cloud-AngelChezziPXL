@@ -2,8 +2,6 @@ package be.pxl.services.productcatalogus.service;
 
 
 import be.pxl.services.productcatalogus.domain.Category;
-import be.pxl.services.productcatalogus.domain.Utils.CategoryHelperMethods;
-import be.pxl.services.productcatalogus.domain.contracts.CategoryContract;
 import be.pxl.services.productcatalogus.domain.dto.CategoryRecord;
 import be.pxl.services.productcatalogus.domain.dto.CategoryRequest;
 import be.pxl.services.productcatalogus.repository.CategoryRepository;
@@ -20,31 +18,32 @@ public class CategoryService implements ICategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public CategoryRecord findCategoryById(Long id) {
-        Category category =categoryRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
-        return CategoryHelperMethods.mapCategoryToCategoryRecord(category);
+    public List<CategoryRecord> findAll() {
+        return this.mapCategoryListToCategoryRecordList(categoryRepository.findAll());
+
     }
 
     @Override
-    public List<CategoryRecord> findAll() {
-        return CategoryHelperMethods.mapCategoryListToCategoryRecordList(categoryRepository.findAll());
-
+    public CategoryRecord findCategoryById(Long id) {
+        Category category =categoryRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+        return this.mapCategoryToCategoryRecord(category);
     }
 
     @Override
     public CategoryRecord findCategoryByName(String name) {
         Category category =categoryRepository.findByName(name)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
-        return CategoryHelperMethods.mapCategoryToCategoryRecord(category);
+        return this.mapCategoryToCategoryRecord(category);
     }
 
     @Override
     public void addCategory(CategoryRequest categoryRequest) {
-        if(categoryNameExists(categoryRequest.getCategoryName())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Category name already exists");
+        String categoryName = categoryRequest.getCategoryName().trim().toLowerCase();
+        if(categoryNameExists(categoryName)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Category '" + categoryName + "' name already exists");
         }
-        Category category = CategoryHelperMethods.mapCategoryRequestToCategory(categoryRequest);
+        Category category = this.mapCategoryRequestToCategory(categoryRequest);
         categoryRepository.save(category);
     }
 
@@ -68,6 +67,22 @@ public class CategoryService implements ICategoryService {
         } catch (ResponseStatusException e) {
             return false;
         }
+    }
+
+    public Category mapCategoryRequestToCategory(CategoryRequest categoryRequest) {
+        return Category.builder()
+                .name(categoryRequest.getCategoryName().trim().toLowerCase())
+                .build();
+    }
+
+    public CategoryRecord mapCategoryToCategoryRecord(Category category) {
+        return new CategoryRecord(category.getId(), category.getName());
+    }
+
+    public List<CategoryRecord> mapCategoryListToCategoryRecordList(List<Category> categories) {
+        return categories.stream()
+                .map(this::mapCategoryToCategoryRecord)
+                .toList();
     }
 
 }

@@ -1,6 +1,5 @@
 package be.pxl.services.productcatalogus.domain.dto;
 
-import be.pxl.services.productcatalogus.domain.Category;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
@@ -20,9 +20,10 @@ public class ProductRequest {
     private String name;
     @NotNull(message= "Product name cannot be empty.")
     private String description;
-    private String category;
+    @NotNull
+    private String categoryName;
     private Boolean available = true;
-    private String tags;
+    private List<String> tags;
     @NotNull(message= "Price is required.")
     @DecimalMin(message = "Price must be greater than 0.", value = "0")
     private BigDecimal price;

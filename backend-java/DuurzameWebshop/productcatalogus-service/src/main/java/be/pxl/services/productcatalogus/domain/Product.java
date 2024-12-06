@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name="product")
@@ -31,53 +29,13 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany
-    @JoinTable(
-            name = "product_tags",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags = new HashSet<>();
+    @ElementCollection
+    private List<String> tags = new ArrayList<>();
 
     public void setCategory(Category category) {
         this.category = category;
         if (category != null && !category.getProducts().contains(this)) {
             category.getProducts().add(this); // Maintain bidirectional consistency
-        }
-
-    }
-
-    public void setTags(Set<Tag> tags) {
-        for (Tag tag : tags) {
-            tag.addProduct(this);
-        }
-        this.tags.clear();
-        this.tags.addAll(tags);
-    }
-
-    // helper methods
-    public void addTag(Tag tag) {
-        if(this.tags == null){
-            this.tags = new HashSet<>();
-        }
-        if (tags.add(tag)){
-            tag.getProducts().add(this);    // Synchronize bidirectional relationship
-        }
-    }
-
-    public void removeTag(Tag tag) {
-        if (tags.contains(tag)) {
-            tags.remove(tag);
-            tag.getProducts().remove(this);
-        }
-    }
-
-    public void removeAllTags() {
-        if (tags != null) {
-            for (Tag tag : tags) {
-                tag.getProducts().remove(this);
-            }
-            tags.clear();
         }
 
     }
