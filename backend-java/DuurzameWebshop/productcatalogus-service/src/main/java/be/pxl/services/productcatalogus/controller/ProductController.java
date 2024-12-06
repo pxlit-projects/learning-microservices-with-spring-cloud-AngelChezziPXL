@@ -1,7 +1,6 @@
 package be.pxl.services.productcatalogus.controller;
 
 import be.pxl.services.productcatalogus.domain.Utils.TagHelperMethods;
-import be.pxl.services.productcatalogus.domain.dto.CategoryRequest;
 import be.pxl.services.productcatalogus.domain.dto.ProductRequest;
 import be.pxl.services.productcatalogus.domain.dto.ProductResponse;
 import be.pxl.services.productcatalogus.domain.dto.TagRequest;
@@ -31,22 +30,23 @@ public class ProductController {
         productService.addProduct(productRequest);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
     }
 
-    @PostMapping("/{id}/category")
+    @PutMapping("/{productId}/category/{categoryId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void setCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequest categoryRequest) {
-        productService.setCategory(id, categoryRequest);
+    public void updateCategory(@PathVariable Long productId, @Valid @PathVariable Long categoryId) {
+        productService.updateProductCategory(productId, categoryId);
     }
+
 
     @PostMapping("{id}/tag")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addTagsToProduct(@PathVariable Long id, @RequestBody TagRequest tagRequest) {
-        List<String> tagsNames = TagHelperMethods.convertInputStringToListOfStrings(tagRequest.getTags());
+        List<String> tagsNames = TagHelperMethods.convertTagsStringToTagStringList(tagRequest.getTags());
         productService.addTagsToProduct(id, tagsNames);
     }
 }

@@ -18,7 +18,8 @@ public class ProductResponse {
     private Long id;
     private String name;
     private String description;
-    private Category category;
+    private CategoryRecord categoryRecord;
+    private Boolean available;
     private List<TagRecord> tags = new ArrayList<>();
     private BigDecimal price;
 }

@@ -1,13 +1,10 @@
 package be.pxl.services.productcatalogus.controller;
 
-import be.pxl.services.productcatalogus.domain.Category;
-import be.pxl.services.productcatalogus.domain.Utils.CategoryHelperMethods;
 import be.pxl.services.productcatalogus.domain.dto.CategoryRecord;
 import be.pxl.services.productcatalogus.domain.dto.CategoryRequest;
 import be.pxl.services.productcatalogus.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,13 +18,34 @@ public class CategoryController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<CategoryRecord> getAllCategories() {
-        List<Category> dbCategories = categoryService.findAll();
-        return CategoryHelperMethods.mapCategoryListToCategoryRecordList(dbCategories);
+        return categoryService.findAll();
+    }
+
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public CategoryRecord getCategoryById(@PathVariable Long id) {
+        return categoryService.findCategoryById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createCategory(@RequestBody CategoryRequest categoryRequest) {
-        categoryService.addCategory(CategoryHelperMethods.mapCategoryRequestToCategory(categoryRequest));
+        categoryService.addCategory(categoryRequest);
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void updateCategoryName(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
+        String categoryName = categoryRequest.getCategoryName().trim().toLowerCase();
+        categoryService.updateCategoryName(id, categoryName);
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategoryById(id);
     }
 }
+
+
+//TODO: ONLY ADMIN USER

@@ -21,6 +21,7 @@ public class ProductRequest {
     @NotNull(message= "Product name cannot be empty.")
     private String description;
     private String category;
+    private Boolean available = true;
     private String tags;
     @NotNull(message= "Price is required.")
     @DecimalMin(message = "Price must be greater than 0.", value = "0")

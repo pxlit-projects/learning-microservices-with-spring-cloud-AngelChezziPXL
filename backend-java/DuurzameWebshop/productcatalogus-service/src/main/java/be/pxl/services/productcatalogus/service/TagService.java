@@ -1,11 +1,16 @@
 package be.pxl.services.productcatalogus.service;
 
 import be.pxl.services.productcatalogus.domain.Tag;
+import be.pxl.services.productcatalogus.domain.Utils.TagHelperMethods;
 import be.pxl.services.productcatalogus.repository.TagRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class TagService implements ITagService {
@@ -13,14 +18,16 @@ public class TagService implements ITagService {
     private final TagRepository tagRepository;
 
     @Override
-    public void addTag(String tagName) {
+    public Tag addTag(String tagName) {
         if (!tagNameExists(tagName)) {
             Tag tag = Tag.builder()
                     .text(tagName)
                     .build();
-            tagRepository.save(tag);
+            return tagRepository.save(tag);
         }
+        return null;
     }
+
 
 
     @Override
@@ -45,6 +52,8 @@ public class TagService implements ITagService {
                 .findFirst().orElse(null);
         return tag != null;
     }
+
+
 
     @Override
     public void updateTag(Tag tag) {

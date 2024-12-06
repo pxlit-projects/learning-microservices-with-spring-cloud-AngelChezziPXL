@@ -37,22 +37,30 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private List<Tag> tags = new ArrayList<>();
+    private Set<Tag> tags = new HashSet<>();
 
     public void setCategory(Category category) {
         this.category = category;
         if (category != null && !category.getProducts().contains(this)) {
             category.getProducts().add(this); // Maintain bidirectional consistency
         }
+
+    }
+
+    public void setTags(Set<Tag> tags) {
+        for (Tag tag : tags) {
+            tag.addProduct(this);
+        }
+        this.tags.clear();
+        this.tags.addAll(tags);
     }
 
     // helper methods
     public void addTag(Tag tag) {
         if(this.tags == null){
-            this.tags = new ArrayList<>();
+            this.tags = new HashSet<>();
         }
-        if (!tags.contains(tag)) {
-            tags.add(tag);
+        if (tags.add(tag)){
             tag.getProducts().add(this);    // Synchronize bidirectional relationship
         }
     }
@@ -64,6 +72,15 @@ public class Product {
         }
     }
 
+    public void removeAllTags() {
+        if (tags != null) {
+            for (Tag tag : tags) {
+                tag.getProducts().remove(this);
+            }
+            tags.clear();
+        }
+
+    }
 
 
     @Override

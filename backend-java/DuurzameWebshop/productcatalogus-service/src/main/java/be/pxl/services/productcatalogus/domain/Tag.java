@@ -21,12 +21,20 @@ public class Tag {
     private String text;
 
     @ManyToMany(mappedBy="tags")
-    private List<Product> products = new ArrayList<>();
+    private Set<Product> products = new HashSet<>();
+
+    private void setProducts(List<Product> products) {
+        for (Product product : products) {
+            product.addTag(this);
+        }
+        this.products.clear();
+        this.products.addAll(products);
+    }
 
     // helper methods
     public void addProduct(Product product) {
         if(products == null) {
-            products = new ArrayList<>();
+            products = new HashSet<>();
         }
         if (!products.contains(product)) {
             products.add(product);

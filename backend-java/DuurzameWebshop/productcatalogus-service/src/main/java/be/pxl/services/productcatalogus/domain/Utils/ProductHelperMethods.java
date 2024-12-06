@@ -13,6 +13,8 @@ public class ProductHelperMethods {
                 .id(product.getId())
                 .name(product.getName())
                 .description(product.getDescription())
+                .categoryRecord(CategoryHelperMethods.mapCategoryToCategoryRecord(product.getCategory()))
+                .available(product.isAvailable())
                 .tags(product.getTags().stream()
                         .map(TagHelperMethods::mapTagToTagRecord)
                         .toList())
@@ -24,6 +26,7 @@ public class ProductHelperMethods {
         return Product.builder()
                 .name(productRequest.getName())
                 .description(productRequest.getDescription())
+                .available(productRequest.getAvailable())
                 .price(productRequest.getPrice())
                 .build();
     }
@@ -33,6 +36,4 @@ public class ProductHelperMethods {
                 .map(ProductHelperMethods::mapProductToProductResponse)
                 .collect(Collectors.toList());
     }
-
-
 }
