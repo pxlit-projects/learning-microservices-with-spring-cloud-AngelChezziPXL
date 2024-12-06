@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Samsung QLED 55-inch TV",
+    "description": "A 4K QLED Smart TV with vibrant colors and deep blacks.",
+    "categoryName": "tv",
+    "available": true,
+    "tags": ["electronics", "tv", "4K", "QLED", "smart"],
+    "price": 999.99
+  },
+  {
+    "name": "LG OLED 65-inch TV",
+    "description": "Premium OLED TV offering deep blacks, vivid colors, and Dolby Vision.",
+    "categoryName": "tv",
+    "available": true,
+    "tags": ["electronics", "tv", "OLED", "4K", "premium"],
+    "price": 1799.00
+  },
+  {
+    "name": "Dell Inspiron Desktop",
+    "description": "Powerful desktop tower with Intel Core i5, ample storage, and Windows 11.",
+    "categoryName": "desktop",
+    "available": true,
+    "tags": ["electronics", "desktop", "Windows", "expandable"],
+    "price": 799.00
+  },
+  {
+    "name": "HP Pavilion All-in-One",
+    "description": "Sleek all-in-one desktop with a 27-inch display, ideal for home and office use.",
+    "categoryName": "desktop",
+    "available": true,
+    "tags": ["electronics", "desktop", "all-in-one", "Windows"],
+    "price": 1099.00
+  },
+  {
+    "name": "Apple MacBook Pro 16",
+    "description": "High-performance laptop with M-series chip, excellent battery life, and a stunning Retina display.",
+    "categoryName": "laptop",
+    "available": true,
+    "tags": ["electronics", "laptop", "macOS", "M-Series", "retina"],
+    "price": 2499.00
+  },
+  {
+    "name": "Dell XPS 13",
+    "description": "Ultra-portable laptop with Intel Core i7, slim design, and long battery life.",
+    "categoryName": "laptop",
+    "available": true,
+    "tags": ["electronics", "laptop", "Windows", "ultrabook"],
+    "price": 1399.00
+  },
+  {
+    "name": "Apple iPad Air",
+    "description": "Lightweight tablet with A15 chip, great for streaming, browsing, and productivity.",
+    "categoryName": "tablet",
+    "available": true,
+    "tags": ["electronics", "tablet", "iOS", "lightweight"],
+    "price": 599.99
+  },
+  {
+    "name": "Samsung Galaxy Tab S9",
+    "description": "High-end Android tablet with an AMOLED display and long battery life.",
+    "categoryName": "tablet",
+    "available": true,
+    "tags": ["electronics", "tablet", "Android", "AMOLED"],
+    "price": 699.00
+  },
+  {
+    "name": "Apple iPhone 15 Pro",
+    "description": "Latest iPhone featuring A17 chip, excellent camera, and long battery life.",
+    "categoryName": "smartphone",
+    "available": true,
+    "tags": ["electronics", "smartphone", "iOS", "flagship"],
+    "price": 1299.00
+  },
+  {
+    "name": "Samsung Galaxy S23 Ultra",
+    "description": "High-end Android smartphone with S-Pen, large display, and powerful camera.",
+    "categoryName": "smartphone",
+    "available": true,
+    "tags": ["electronics", "smartphone", "Android", "5G"],
+    "price": 1199.00
+  }
+]
