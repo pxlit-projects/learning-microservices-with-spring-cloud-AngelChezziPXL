@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class Product {
     private Long id;
     private String name;
     private String description;
-    private BigDecimal price;
+    private double price;
     private boolean available = true;
 
     @ManyToOne

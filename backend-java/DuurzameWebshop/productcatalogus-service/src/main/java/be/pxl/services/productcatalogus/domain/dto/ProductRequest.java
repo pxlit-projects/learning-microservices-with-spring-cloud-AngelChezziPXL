@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -26,5 +25,5 @@ public class ProductRequest {
     private List<String> tags;
     @NotNull(message= "Price is required.")
     @DecimalMin(message = "Price must be greater than 0.", value = "0")
-    private BigDecimal price;
+    private double price;
 }
