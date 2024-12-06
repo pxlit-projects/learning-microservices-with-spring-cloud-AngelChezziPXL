@@ -8,6 +8,7 @@ import java.util.List;
 public interface ICategoryService {
     List<CategoryRecord> findAll();
     CategoryRecord findCategoryById(Long id);
+    CategoryRecord findCategoryByName(String name);
     void addCategory(CategoryRequest categoryRequest);
 
     void updateCategoryName(Long id, String categoryName);
