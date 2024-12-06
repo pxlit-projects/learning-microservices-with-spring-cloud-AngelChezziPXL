@@ -1,7 +1,7 @@
 <template>
   <div class="product-list">
     <ProductCard
-        v-for="product in productStore.products"
+        v-for="product in filteredProducts"
         :key="product.id"
         :product="product"
     />
@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import{computed} from 'vue';
 import { useProductStore } from '@/stores/ProductStore';
 import ProductCard from '@/components/ProductCard.vue';
 import ProductModal from "@/components/ProductModal.vue";
@@ -18,9 +19,9 @@ export default {
   components: {ProductModal, ProductCard },
   setup() {
     const productStore = useProductStore();
-
+    const filteredProducts = computed(() => productStore.getFilteredProducts);
     return {
-      productStore,
+      filteredProducts,
     };
   },
 };

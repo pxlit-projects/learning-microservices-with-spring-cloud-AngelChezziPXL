@@ -14,7 +14,7 @@ export const useProductStore = defineStore('product', {
         selectedProduct: Object,
         isModalVisible: false,
 
-        selectedCategoryFilter: "", // Declarative naming for the category filter
+        selectedCategory: "", // Declarative naming for the category filter
         filteredProducts: [], // List of products matching filters
 
         categories: [
@@ -32,7 +32,7 @@ export const useProductStore = defineStore('product', {
             },
             {
                 id: 4,
-                name: "smartphones"
+                name: "smartphone"
             },
 
         ],
@@ -77,10 +77,21 @@ export const useProductStore = defineStore('product', {
     }),
     getters: {
         getProductById: (state) => (id) => state.products.find((product) => product.id === id),
+        getFilteredProducts(state) {
+            return state.filteredProducts.length ? state.filteredProducts : state.products;
+        },
     },
 
     actions: {
-
+        filterByCategory(category) {
+            this.filteredProducts = this.products.filter(
+                (product) => product.category === category.name
+            );
+        },
+        resetFilters() {
+            this.filteredProducts = [];
+            this.selectedCategory = "";
+        },
 
 
         addToCart(productId, quantity) {

@@ -1,16 +1,17 @@
 <template>
   <div>
-    <label for="category-filter">Filter by Category:</label>
-    <select id="category-filter" v-model="selectedCategoryFilter" @change="applyFilter">
+    <h2>Filter by Category</h2>
+    <select v-model="selectedCategory" @change="filterProducts">
       <option value="">All Categories</option>
-      <option v-for="category in categories" :key="category.id" :value="category.name">
-        {{ category.name }}
+      <option v-for="category in categories" :key="category" :value="category">
+        {{ category.name}}
       </option>
     </select>
   </div>
 </template>
 
 <script>
+import { computed } from "vue";
 import { useProductStore } from "@/stores/ProductStore";
 
 export default {
@@ -18,25 +19,39 @@ export default {
   setup() {
     const productStore = useProductStore();
 
-    const applyFilter = () => {
-      productStore.updateCategoryFilter(productStore.selectedCategoryFilter);
+    const categories = computed(() => productStore.categories);
+    const selectedCategory = computed({
+      get: () => productStore.selectedCategory,
+      set: (value) => (productStore.selectedCategory = value),
+    });
+
+
+    const filterProducts = () => {
+      if (selectedCategory.value) {
+        productStore.filterByCategory(selectedCategory.value);
+      } else {
+        productStore.resetFilters(); // Reset filters if "All Categories" is selected
+      }
     };
 
     return {
-      categories: productStore.categories,
-      selectedCategoryFilter: productStore.selectedCategoryFilter, // Two-way bind to the store
-      applyFilter,
+      categories,
+      selectedCategory,
+      filterProducts,
     };
   },
 };
 </script>
 
 <style scoped>
-/* Optional styles */
+/* Add any necessary styles */
 select {
   padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
   font-size: 1rem;
+  border: grey thin solid;
+  border-radius: 5px;
+}
+select:hover{
+  background-color: lightgray;
 }
 </style>
