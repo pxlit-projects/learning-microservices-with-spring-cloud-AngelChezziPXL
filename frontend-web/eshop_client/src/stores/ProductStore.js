@@ -136,5 +136,14 @@ export const useProductStore = defineStore('product', {
             }
             this.closeEditModal();
         },
+        deleteProduct(productId) {
+            const index = this.products.findIndex((product) => product.id === productId);
+            if (index !== -1) {
+                this.products.splice(index, 1);
+                this.filteredProducts = this.filteredProducts.filter(
+                    (product) => product.id !== productId
+                );
+            }
+        },
     },
 });

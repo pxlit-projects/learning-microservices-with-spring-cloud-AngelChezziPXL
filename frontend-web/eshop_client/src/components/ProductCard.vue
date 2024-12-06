@@ -24,7 +24,11 @@
       <button @click="addToCart">Add to Cart</button>
     </div>
 
-    <button v-if="isAdmin" class="edit-button" @click="editProduct">Edit</button>
+    <div v-if="isAdmin" class="admin-actions">
+      <button class="edit-button" @click="editProduct">Edit</button>
+      <button class="delete-button" @click="confirmDelete">Delete</button>
+    </div>
+
   </div>
 </template>
 
@@ -60,10 +64,20 @@ export default {
         productStore.openEditModal(props.product); // Call store action to open modal
     };
 
+    const confirmDelete = () => {
+      const confirmation = confirm(
+          `Are you sure you want to delete the product "${props.product.name}"?`
+      );
+      if (confirmation) {
+        productStore.deleteProduct(props.product.id);
+      }
+    };
+
     return {
       quantity,
       addToCart,
       editProduct,
+      confirmDelete,
       isAdmin,
     };
   },
@@ -148,6 +162,14 @@ export default {
   background-color: #0056b3;
 }
 
+/* Admin Actions Styling */
+.admin-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
 /* Edit Button Styling */
 .edit-button {
   background-color: #28a745;
@@ -156,11 +178,24 @@ export default {
   padding: 5px 10px;
   border-radius: 3px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 .edit-button:hover {
   background-color: #218838;
+}
+
+/* Delete Button Styling */
+.delete-button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
 }
 
 /* Out of Stock Styling */
