@@ -7,6 +7,5 @@ import org.springframework.stereotype.Service;
 public class ShoppingCartService implements IShoppingCartService {
     @Override
     public void addItem(ShoppingCartItem shoppingCartItem) {
-        this.
     }
 }
