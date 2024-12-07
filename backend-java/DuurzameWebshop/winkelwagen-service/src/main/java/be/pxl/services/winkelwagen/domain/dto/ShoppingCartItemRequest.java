@@ -5,9 +5,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ItemRequest {
+public class ShoppingCartItemRequest {
     Long id;
-    String name;
+    String productName;
     String description;
     double price;
+    int quantity;
 }

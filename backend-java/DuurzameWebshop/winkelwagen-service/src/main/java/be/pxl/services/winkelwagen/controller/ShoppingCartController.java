@@ -1,6 +1,6 @@
 package be.pxl.services.winkelwagen.controller;
 
-import be.pxl.services.winkelwagen.domain.dto.ItemRequest;
+import be.pxl.services.winkelwagen.domain.dto.ShoppingCartItemRequest;
 import be.pxl.services.winkelwagen.service.IShoppingCartService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +15,6 @@ public class ShoppingCartController {
     IShoppingCartService shoppingCartService;
 
     @PostMapping
-    public void AddItemToShoppingCart(Long userId, ItemRequest itemRequest) {}
+    public void AddItemToShoppingCart(Long userId, ShoppingCartItemRequest shoppingCartItemRequest) {}
 
 }
