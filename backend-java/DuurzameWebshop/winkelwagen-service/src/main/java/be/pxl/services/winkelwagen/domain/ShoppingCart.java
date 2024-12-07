@@ -25,14 +25,14 @@ public class ShoppingCart {
             joinColumns = @JoinColumn(name= "cart_id"),
             inverseJoinColumns = @JoinColumn(name= "item_id")
     )
-    private List<Item> items = new ArrayList<>();
+    private List<ShoppingCartItem> shoppingCartItems = new ArrayList<>();
 
-    public void addItemToCart(Item item) {
-        items.add(item);
+    public void addItemToCart(ShoppingCartItem shoppingCartItem) {
+        shoppingCartItems.add(shoppingCartItem);
     }
 
-    public void removeItemFromCart(Item item) {
-        items.remove(item);
+    public void removeItemFromCart(ShoppingCartItem shoppingCartItem) {
+        shoppingCartItems.remove(shoppingCartItem);
     }
 
 

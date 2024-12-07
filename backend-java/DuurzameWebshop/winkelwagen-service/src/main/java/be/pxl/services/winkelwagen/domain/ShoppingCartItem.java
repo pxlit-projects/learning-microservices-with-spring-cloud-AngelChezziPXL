@@ -11,14 +11,13 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item {
+public class ShoppingCartItem {
     @Id
     private Long id;
     private String productName;
@@ -28,15 +27,23 @@ public class Item {
     @ManyToMany(mappedBy = "items")
     private List<ShoppingCart> carts= new ArrayList<>();
 
+    public void add(ShoppingCartItem otherItem) {
+        this.quantity += otherItem.quantity;
+    }
+
+    public void subtract(ShoppingCartItem otherItem) {
+        this.quantity -= otherItem.quantity;
+    }
+
+
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Item item)) return false;
-        return Objects.equals(id, item.id);
+        if (!(o instanceof ShoppingCartItem that)) return false;
+        return Double.compare(quantity, that.quantity) == 0 && Objects.equals(id, that.id) && Objects.equals(carts, that.carts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(id, quantity, carts);
     }
-
 }
