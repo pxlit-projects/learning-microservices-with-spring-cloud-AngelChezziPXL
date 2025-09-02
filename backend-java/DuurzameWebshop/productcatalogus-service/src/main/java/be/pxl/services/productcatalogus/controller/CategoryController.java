@@ -1,7 +1,7 @@
 package be.pxl.services.productcatalogus.controller;
 
-import be.pxl.services.productcatalogus.domain.dto.CategoryRecord;
-import be.pxl.services.productcatalogus.domain.dto.CategoryRequest;
+import be.pxl.services.productcatalogus.controller.dto.CategoryRecord;
+import be.pxl.services.productcatalogus.controller.dto.CategoryRequest;
 import be.pxl.services.productcatalogus.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

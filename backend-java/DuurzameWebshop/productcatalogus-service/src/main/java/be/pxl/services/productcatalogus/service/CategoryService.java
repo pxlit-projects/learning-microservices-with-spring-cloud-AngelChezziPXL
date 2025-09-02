@@ -2,8 +2,10 @@ package be.pxl.services.productcatalogus.service;
 
 
 import be.pxl.services.productcatalogus.domain.Category;
-import be.pxl.services.productcatalogus.domain.dto.CategoryRecord;
-import be.pxl.services.productcatalogus.domain.dto.CategoryRequest;
+import be.pxl.services.productcatalogus.controller.dto.CategoryRecord;
+import be.pxl.services.productcatalogus.controller.dto.CategoryRequest;
+import be.pxl.services.productcatalogus.exception.ConflictException;
+import be.pxl.services.productcatalogus.exception.ResourceNotFoundExeception;
 import be.pxl.services.productcatalogus.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,14 +28,14 @@ public class CategoryService implements ICategoryService {
     @Override
     public CategoryRecord findCategoryById(Long id) {
         Category category =categoryRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundExeception("Category not found"));
         return this.mapCategoryToCategoryRecord(category);
     }
 
     @Override
     public CategoryRecord findCategoryByName(String name) {
         Category category =categoryRepository.findByName(name)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundExeception("Category not found"));
         return this.mapCategoryToCategoryRecord(category);
     }
 
@@ -41,7 +43,7 @@ public class CategoryService implements ICategoryService {
     public void addCategory(CategoryRequest categoryRequest) {
         String categoryName = categoryRequest.getCategoryName().trim().toLowerCase();
         if(categoryNameExists(categoryName)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Category '" + categoryName + "' name already exists");
+            throw new ConflictException("Category '" + categoryName + "' name already exists");
         }
         Category category = this.mapCategoryRequestToCategory(categoryRequest);
         categoryRepository.save(category);
@@ -49,7 +51,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public void updateCategoryName(Long id, String categoryName) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundExeception("Category not found"));
         category.setName(categoryName);
         categoryRepository.save(category);
     }
@@ -62,7 +64,7 @@ public class CategoryService implements ICategoryService {
     // Class helper methods
     private boolean categoryNameExists(String name) {
         try {
-            categoryRepository.findByName(name).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+            categoryRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundExeception("Category not found"));
             return true;
         } catch (ResponseStatusException e) {
             return false;
