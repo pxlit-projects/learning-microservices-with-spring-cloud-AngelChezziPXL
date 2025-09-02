@@ -1,4 +1,4 @@
-package be.pxl.services.productcatalogus.domain.dto;
+package be.pxl.services.productcatalogus.controller.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
