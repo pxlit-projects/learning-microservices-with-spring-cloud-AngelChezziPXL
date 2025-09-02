@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(unique = true, nullable = false)        // so names will be unique and there cannot be a null value
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
