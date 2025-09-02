@@ -4,10 +4,8 @@
     <div id="tag-filter" class="tag-container">
       <div v-for="tag in uniqueTags" :key="tag" class="tag-item">
         <input
-            type="checkbox"
-            :id="tag"
-            :value="tag"
-            v-model="selectedTags"
+            type="text"
+            v-model="searchTagList"
             @change="updateTags"
         />
         <label :for="tag">{{ tag }}</label>
@@ -22,8 +20,15 @@ import { useProductStore } from "@/stores/ProductStore.js";
 
 export default {
   name: "TagFilter",
+  components: {
+    searchTagList: "",
+  },
+  getters() {
+    
+  },
   setup() {
     const productStore = useProductStore();
+    this.searchTagList = "Hello"
 
     // Compute unique tags from all products
     const uniqueTags = computed(() => {
@@ -35,6 +40,7 @@ export default {
       uniqueTags,
       selectedTags: productStore.selectedTags, // Two-way bind to store's selectedTags
       updateTags: productStore.updateTags, // Action to update selectedTags
+      searchTagList
     };
   },
 };

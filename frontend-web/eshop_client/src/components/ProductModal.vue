@@ -49,7 +49,7 @@
 
           <!-- Price -->
           <label>
-            Price:
+            Price(€):
             <input
                 class="input-field"
                 v-model.number="selectedProduct.price"

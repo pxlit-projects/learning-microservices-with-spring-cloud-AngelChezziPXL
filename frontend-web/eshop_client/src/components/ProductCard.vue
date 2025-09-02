@@ -6,7 +6,7 @@
     <div class="product-tags">
       <span v-for="tag in product.tags" :key="tag" class="tag">{{ tag }}</span>
     </div>
-    <p class="product-price">Price: ${{ product.price.toFixed(2) }}</p>
+    <p class="product-price">Price: €{{ product.price.toFixed(2) }}</p>
     <p class="product-status" :class="{ 'out-of-stock': !product.available }">
       {{ product.available ? 'In Stock' : 'Out of Stock' }}
     </p>

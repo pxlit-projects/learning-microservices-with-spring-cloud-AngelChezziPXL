@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,20 +23,20 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
     // Helper method to add a product to the category
     public void addProduct(Product product) {
-        if (!products.contains(product)) {
-            products.add(product);
+        if (getProducts() != null && !this.products.contains(product)) {
+            this.products.add(product);
             product.setCategory(this); // Maintain bidirectional consistency
         }
     }
 
     // Helper method to remove a product from the category
     public void removeProduct(Product product) {
-        if (products.contains(product)) {
-            products.remove(product);
+        if (this.products.contains(product)) {
+            this.products.remove(product);
             product.setCategory(null); // Break bidirectional relationship
         }
     }

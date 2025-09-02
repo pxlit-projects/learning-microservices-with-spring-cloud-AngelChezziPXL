@@ -34,9 +34,14 @@ public class Product {
     public void setCategory(Category category) {
         this.category = category;
         if (category != null && !category.getProducts().contains(this)) {
-            category.getProducts().add(this); // Maintain bidirectional consistency
+            category.addProduct(this); // Maintain bidirectional consistency
         }
+    }
 
+    public void addTags(String tag) {
+        if (!tags.contains(tag)) {
+            tags.add(tag);
+        }
     }
 
 

@@ -27,7 +27,9 @@ public class ProductService implements IProductService {
 
     @Override
     public ProductResponse findById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Product with id %s not found", id)));
+        Product product = productRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Product with id %s not found", id)));
         return this.mapProductToProductResponse(product);
     }
 
@@ -48,8 +50,8 @@ public class ProductService implements IProductService {
         productRepository.deleteById(id);
     }
 
-    // helper methods
-    public Product mapProductRequestToProduct(ProductRequest productRequest) {
+    // helper methods (CUSTOM MAPPER)
+    private Product mapProductRequestToProduct(ProductRequest productRequest) {
         String categoryName = productRequest.getCategoryName().trim().toLowerCase();
         Category category = categoryRepository.findByName(categoryName).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Category %s does not exist in the database", categoryName)));
         return Product.builder()
@@ -62,13 +64,14 @@ public class ProductService implements IProductService {
                 .build();
     }
 
-    public List<ProductResponse> mapProductListToProductResponseList(List<Product> productList) {
+    private List<ProductResponse> mapProductListToProductResponseList(List<Product> productList) {
         return productList.stream().map(this::mapProductToProductResponse).toList();
     }
 
-    public ProductResponse mapProductToProductResponse(Product product){
+    private ProductResponse mapProductToProductResponse(Product product){
         return ProductResponse.builder()
                 .id(product.getId())
+                .name(product.getName())
                 .description(product.getDescription())
                 .categoryName(product.getCategory().getName())
                 .tags(product.getTags())
@@ -76,5 +79,4 @@ public class ProductService implements IProductService {
                 .price(product.getPrice())
                 .build();
     }
-
 }

@@ -3,9 +3,11 @@ package be.pxl.services.winkelwagen.controller;
 import be.pxl.services.winkelwagen.domain.dto.ShoppingCartItemRequest;
 import be.pxl.services.winkelwagen.service.IShoppingCartService;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 
 @RestController
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShoppingCartController {
     IShoppingCartService shoppingCartService;
 
-    @PostMapping
-    public void AddItemToShoppingCart(Long userId, ShoppingCartItemRequest shoppingCartItemRequest) {}
+    @PostMapping("/{id}")
+    public void AddItemToShoppingCart(@PathVariable long id, Long userId, ShoppingCartItemRequest shoppingCartItemRequest) {
+        shoppingCartService.addItem(id, shoppingCartItemRequest);
+    }
 
 }
