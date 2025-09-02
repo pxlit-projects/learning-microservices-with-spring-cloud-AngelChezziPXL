@@ -27,7 +27,7 @@ public class ProductBuilder {
         this.product.setTags(tags);
     }
 
-    public ProductBuilder withId(long id) {
+    public ProductBuilder withId(Long id) {
         this.product.setId(id);
         return this;
     }
