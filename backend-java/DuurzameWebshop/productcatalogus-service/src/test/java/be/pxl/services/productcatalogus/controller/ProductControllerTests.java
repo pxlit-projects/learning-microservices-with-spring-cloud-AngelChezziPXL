@@ -1,7 +1,7 @@
 package be.pxl.services.productcatalogus.controller;
 
-import be.pxl.services.productcatalogus.domain.dto.ProductRequest;
-import be.pxl.services.productcatalogus.domain.dto.ProductResponse;
+import be.pxl.services.productcatalogus.controller.dto.ProductRequest;
+import be.pxl.services.productcatalogus.controller.dto.ProductResponse;
 import be.pxl.services.productcatalogus.service.IProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
