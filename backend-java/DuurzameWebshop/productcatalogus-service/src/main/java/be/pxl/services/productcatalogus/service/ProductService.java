@@ -45,7 +45,11 @@ public class ProductService implements IProductService {
 
     @Override
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+        if(!productRepository.existsById(id)) {
+            throw new ResourceNotFoundExeception(String.format("Product with id %s not found", id));
+        }
+        productRepository.deleteById(id
+        );
     }
 
     // helper methods (CUSTOM MAPPER)
