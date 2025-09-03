@@ -20,7 +20,6 @@ public class CategoryService implements ICategoryService {
     @Override
     public List<CategoryRecord> findAll() {
         return this.mapCategoryListToCategoryRecordList(categoryRepository.findAll());
-
     }
 
     @Override
