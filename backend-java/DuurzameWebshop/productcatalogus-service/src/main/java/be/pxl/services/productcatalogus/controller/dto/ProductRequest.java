@@ -17,9 +17,9 @@ public class ProductRequest {
     //private Long id;
     @NotNull(message= "Product name cannot be empty.")
     private String name;
-    @NotNull(message= "Product name cannot be empty.")
+    @NotNull(message= "Product description cannot be empty.")
     private String description;
-    @NotNull
+    @NotNull(message="Product categoryName cannot be empty.")
     private String categoryName;
     private Boolean available = true;
     private List<String> tags;
