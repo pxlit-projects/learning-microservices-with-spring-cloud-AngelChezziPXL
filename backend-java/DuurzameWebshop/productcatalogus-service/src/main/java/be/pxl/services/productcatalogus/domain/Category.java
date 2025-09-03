@@ -17,7 +17,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(unique = true, nullable = false)        // so names will be unique and there cannot be a null value
+    @Column(unique = true, nullable = false)        // so that names will be unique and there cannot be a null value
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
