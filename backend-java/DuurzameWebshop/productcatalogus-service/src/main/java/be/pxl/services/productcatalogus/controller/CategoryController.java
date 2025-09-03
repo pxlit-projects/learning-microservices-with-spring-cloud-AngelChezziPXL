@@ -2,7 +2,9 @@ package be.pxl.services.productcatalogus.controller;
 
 import be.pxl.services.productcatalogus.controller.dto.CategoryRecord;
 import be.pxl.services.productcatalogus.controller.dto.CategoryRequest;
-import be.pxl.services.productcatalogus.service.CategoryService;
+import be.pxl.services.productcatalogus.service.ICategoryService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
 public class CategoryController {
-    private final CategoryService categoryService;
+    private final ICategoryService categoryService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -23,26 +25,26 @@ public class CategoryController {
 
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoryRecord getCategoryById(@PathVariable Long id) {
+    public CategoryRecord getCategoryById(@PathVariable @Positive Long id) {
         return categoryService.findCategoryById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCategory(@RequestBody CategoryRequest categoryRequest) {
+    public void createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
         categoryService.addCategory(categoryRequest);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateCategoryName(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
+    public void updateCategoryName(@PathVariable @Positive Long id, @Valid @RequestBody CategoryRequest categoryRequest) {
         String categoryName = categoryRequest.getCategoryName().trim().toLowerCase();
         categoryService.updateCategoryName(id, categoryName);
     }
 
     @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteCategory(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCategory(@PathVariable @Positive Long id) {
         categoryService.deleteCategoryById(id);
     }
 }
