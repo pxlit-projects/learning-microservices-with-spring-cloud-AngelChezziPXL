@@ -31,7 +31,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public CategoryRecord findCategoryByName(String name) {
-        Category category =categoryRepository.findByName(name)
+        Category category =categoryRepository.findByName(name.toLowerCase())
                 .orElseThrow(() -> new ResourceNotFoundExeception("Category not found"));
         return this.mapCategoryToCategoryRecord(category);
     }
@@ -39,7 +39,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public void addCategory(CategoryRequest categoryRequest) {
         String categoryName = categoryRequest.getCategoryName().trim().toLowerCase();
-        Category category = categoryRepository.findByName(categoryName).orElse(null);
+        Category category = categoryRepository.findByName(categoryName.toLowerCase()).orElse(null);
         if (category != null) {
             throw new ConflictException("Category with name " + categoryName + " already exists");
         }
@@ -54,12 +54,12 @@ public class CategoryService implements ICategoryService {
         if (category == null) {
             throw new ResourceNotFoundExeception("Category with id " + id + " not found");
         }
-        if(categoryRepository.findByName(categoryName).orElse(null) != null) {
+        if(categoryRepository.findByName(categoryName.toLowerCase()).orElse(null) != null) {
             throw new ConflictException("Category with name " + categoryName + " already exists");
         }
 
 
-        category.setName(categoryName);
+        category.setName(categoryName.toLowerCase());
         categoryRepository.save(category);
     }
 

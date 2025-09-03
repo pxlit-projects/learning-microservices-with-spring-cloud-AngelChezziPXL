@@ -81,15 +81,4 @@ public class ProductService implements IProductService {
                 .price(product.getPrice())
                 .build();
     }
-
-    private Product updateProductFields(ProductRequest productRequest, Product product) {
-        product.setName(productRequest.getName());
-        product.setDescription(productRequest.getDescription());
-        product.setAvailable(product.isAvailable());
-        product.setPrice(productRequest.getPrice());
-        product.setTags(productRequest.getTags());
-        product.getCategory().setName(productRequest.getCategoryName());
-        return product;
-    }
-
 }
