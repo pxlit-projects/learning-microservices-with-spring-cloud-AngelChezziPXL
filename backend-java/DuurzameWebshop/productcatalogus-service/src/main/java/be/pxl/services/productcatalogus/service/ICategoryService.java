@@ -10,7 +10,6 @@ public interface ICategoryService {
     CategoryRecord findCategoryById(Long id);
     CategoryRecord findCategoryByName(String name);
     void addCategory(CategoryRequest categoryRequest);
-
     void updateCategoryName(Long id, String categoryName);
     void deleteCategoryById(Long id);
 }
