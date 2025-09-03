@@ -1,10 +1,7 @@
 package be.pxl.services.productcatalogus.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +22,7 @@ public class Product {
     private boolean available = true;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @ElementCollection
@@ -43,7 +40,6 @@ public class Product {
             tags.add(tag);
         }
     }
-
 
     @Override
     public boolean equals(Object o) {
