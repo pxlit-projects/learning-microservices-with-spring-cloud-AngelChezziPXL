@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionControllerAdvice {
     @ExceptionHandler({ResourceNotFoundExeception.class})
-    public ResponseEntity<Object> handleRsourceNotFoundExeception(ResourceNotFoundExeception ex, HttpServletRequest request) {
+    public ResponseEntity<Object> handleResourceNotFoundExeception(ResourceNotFoundExeception ex, HttpServletRequest request) {
         ApiError error = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI());
         return ResponseEntity
                 .status(error.getStatus())
