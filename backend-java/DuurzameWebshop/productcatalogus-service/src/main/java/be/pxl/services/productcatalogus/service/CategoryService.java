@@ -7,15 +7,13 @@ import be.pxl.services.productcatalogus.controller.dto.CategoryRequest;
 import be.pxl.services.productcatalogus.exception.ConflictException;
 import be.pxl.services.productcatalogus.exception.ResourceNotFoundExeception;
 import be.pxl.services.productcatalogus.repository.CategoryRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CategoryService implements ICategoryService {
     private final CategoryRepository categoryRepository;
 
@@ -42,35 +40,38 @@ public class CategoryService implements ICategoryService {
     @Override
     public void addCategory(CategoryRequest categoryRequest) {
         String categoryName = categoryRequest.getCategoryName().trim().toLowerCase();
-        if(categoryNameExists(categoryName)) {
-            throw new ConflictException("Category '" + categoryName + "' name already exists");
+        Category category = categoryRepository.findByName(categoryName).orElse(null);
+        if (category != null) {
+            throw new ConflictException("Category with name " + categoryName + " already exists");
         }
-        Category category = this.mapCategoryRequestToCategory(categoryRequest);
+
+        category = this.mapCategoryRequestToCategory(categoryRequest);
         categoryRepository.save(category);
     }
 
     @Override
     public void updateCategoryName(Long id, String categoryName) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundExeception("Category not found"));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundExeception("Category with id = " + id + " not found"));
+        if (category == null) {
+            throw new ResourceNotFoundExeception("Category with id " + id + " not found");
+        }
+        if(categoryRepository.findByName(categoryName).orElse(null) != null) {
+            throw new ConflictException("Category with name " + categoryName + " already exists");
+        }
+
+
         category.setName(categoryName);
         categoryRepository.save(category);
     }
 
     public void deleteCategoryById(Long id) {
+        Category category = categoryRepository.findById(id).orElse( null   );
+        if(category == null) throw new ResourceNotFoundExeception("Category with id = " + id + " not found");
         categoryRepository.deleteById(id);
     }
 
 
     // Class helper methods
-    private boolean categoryNameExists(String name) {
-        try {
-            categoryRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundExeception("Category not found"));
-            return true;
-        } catch (ResponseStatusException e) {
-            return false;
-        }
-    }
-
     public Category mapCategoryRequestToCategory(CategoryRequest categoryRequest) {
         return Category.builder()
                 .name(categoryRequest.getCategoryName().trim().toLowerCase())
