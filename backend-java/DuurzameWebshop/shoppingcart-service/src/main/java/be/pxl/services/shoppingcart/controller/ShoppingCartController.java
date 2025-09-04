@@ -22,7 +22,7 @@ public class ShoppingCartController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("{id}")
-    public String AddItemToShoppingCart(@PathVariable Integer id,@Valid @RequestBody ItemNewRequest itemNewRequest) {
+    public String AddItemToShoppingCart(@PathVariable Integer id, @RequestBody @Valid ItemNewRequest itemNewRequest) {
         return "Post ok";
 
     }

@@ -1,18 +1,19 @@
 package be.pxl.services.shoppingcart.controller.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ItemNewRequest {
     @Positive
     private long id;
-    @NotNull
+    @Positive
     private long productId;
+    @Positive
     private int quantity;
     @NotBlank
     private String description;
