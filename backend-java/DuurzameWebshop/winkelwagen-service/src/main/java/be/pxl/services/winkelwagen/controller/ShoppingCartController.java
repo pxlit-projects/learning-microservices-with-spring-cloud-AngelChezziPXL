@@ -1,7 +1,6 @@
 package be.pxl.services.winkelwagen.controller;
 
-import be.pxl.services.winkelwagen.domain.dto.ShoppingCartItemRequest;
-import be.pxl.services.winkelwagen.service.IShoppingCartService;
+import be.pxl.services.winkelwagen.service.ShoppingCartService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/winkelwagen")
 @AllArgsConstructor
 public class ShoppingCartController {
-    IShoppingCartService shoppingCartService;
+    ShoppingCartService shoppingCartService;
 
     @PostMapping("/{id}")
-    public void AddItemToShoppingCart(@PathVariable long id, Long userId, ShoppingCartItemRequest shoppingCartItemRequest) {
-        shoppingCartService.addItem(id, shoppingCartItemRequest);
+    public void AddItemToShoppingCart(@PathVariable long id) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
