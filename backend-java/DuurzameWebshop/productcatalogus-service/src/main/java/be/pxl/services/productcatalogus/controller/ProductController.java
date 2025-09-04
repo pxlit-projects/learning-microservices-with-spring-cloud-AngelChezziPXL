@@ -17,25 +17,25 @@ public class ProductController {
     private final IProductService productService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)                  // nodig voor de ShoppingCart MS
     public List<ProductResponse> getAllProducts() {
         return productService.findAll();
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)                  // nodig voor de ShoppingCart MS
     public ProductResponse getProductById(@PathVariable Long id) {
         return productService.findById(id);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)             // voor producten te kunnen toevoegen
     public void createProduct(@Valid @RequestBody ProductRequest productRequest) {
         productService.addProduct(productRequest);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK)                      // voor updaten, categoriseren, labelen van producten
     public void updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
     }
