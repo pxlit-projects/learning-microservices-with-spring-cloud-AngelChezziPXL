@@ -1,21 +1,21 @@
 package be.pxl.services.winkelwagen.service.builder;
 
-import be.pxl.services.winkelwagen.domain.CartItem;
+import be.pxl.services.winkelwagen.domain.Item;
 import be.pxl.services.winkelwagen.domain.ShoppingCart;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class CartItemMockBuilder {
-    private CartItem cartItem;
+public class ItemMockBuilder {
+    private Item item;
     private ProductMockBuilder productBuilder = new ProductMockBuilder();
     private ShoppingCartMockBuilder shoppingCartMockBuilder = new ShoppingCartMockBuilder();
     private Random random = new Random();
 
-    public CartItemMockBuilder() {
-        cartItem = new CartItem();
-        cartItem.setId(random.nextLong(1,1000));
+    public ItemMockBuilder() {
+        item = new Item();
+        item.setId(random.nextLong(1,1000));
 
         List<ShoppingCart> shoppingCarts = new ArrayList<>();
         for(int i = 0; i < 5; i++){
@@ -23,12 +23,12 @@ public class CartItemMockBuilder {
             shoppingCarts.add(shoppingCart);
         }
 
-        cartItem.setProduct(productBuilder.build());
-        cartItem.setQuantity(random.nextInt(1,25));
+        item.setProduct(productBuilder.build());
+        item.setQuantity(random.nextInt(1,25));
     }
 
-    public CartItem build() {
-        return cartItem;
+    public Item build() {
+        return item;
     }
 
 

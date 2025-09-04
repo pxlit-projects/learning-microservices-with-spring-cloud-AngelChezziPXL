@@ -1,6 +1,6 @@
 package be.pxl.services.winkelwagen.service;
 
-import be.pxl.services.winkelwagen.domain.CartItem;
+import be.pxl.services.winkelwagen.domain.Item;
 import be.pxl.services.winkelwagen.repository.ShoppingCartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,12 +12,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 
     @Override
-    public void addItem(CartItem cartItem) {
+    public void addItem(Item item) {
 
     }
 
     @Override
-    public void removeItem(CartItem cartItem) {
+    public void removeItem(Item item) {
 
     }
 

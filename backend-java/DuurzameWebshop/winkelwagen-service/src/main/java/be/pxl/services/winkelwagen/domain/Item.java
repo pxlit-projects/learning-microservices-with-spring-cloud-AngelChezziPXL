@@ -15,22 +15,22 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartItem {
+public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @OneToOne(optional = false)
+    private Long productId;
+    @Transient
     private Product product;
-
     private int quantity;
 
+    //Methods
     public double calculateLineTotal() {
         double lineTotal = product.getPrice() * (double)quantity;
         return Math.round(lineTotal * 100.0) / 100.0;               // will be rounded to 0.01 precision
     }
 
-    @ManyToMany(mappedBy = "cartItems")
+    @ManyToMany(mappedBy = "items")
     private List<ShoppingCart> carts= new ArrayList<>();
 
     public void addShoppingCart(ShoppingCart cart) {
@@ -47,7 +47,7 @@ public class CartItem {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof CartItem that)) return false;
+        if (!(o instanceof Item that)) return false;
         return Double.compare(quantity, that.quantity) == 0 && Objects.equals(id, that.id) && Objects.equals(carts, that.carts);
     }
 

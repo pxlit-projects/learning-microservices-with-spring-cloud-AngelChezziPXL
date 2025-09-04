@@ -1,4 +1,4 @@
-package be.pxl.services.winkelwagen.controller.dto;
+package be.pxl.services.winkelwagen.service.dto;
 
 import be.pxl.services.winkelwagen.domain.Product;
 import lombok.*;
@@ -10,7 +10,6 @@ import lombok.*;
 public class ProductDto {
 
     private Long id;
-    private Long sellerProductId;
     private String name;
     private String description;
     private Double price;
@@ -18,7 +17,6 @@ public class ProductDto {
     public static ProductDto fromProduct(Product product) {
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
-        productDto.setSellerProductId(product.getSellerProductId());
         productDto.setName(product.getName());
         productDto.setDescription(product.getDescription());
         productDto.setPrice(product.getPrice());
@@ -28,7 +26,6 @@ public class ProductDto {
     public static Product toProduct(ProductDto productDto) {
         Product product = new Product();
         product.setId(productDto.getId());
-        product.setSellerProductId(productDto.getSellerProductId());
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());

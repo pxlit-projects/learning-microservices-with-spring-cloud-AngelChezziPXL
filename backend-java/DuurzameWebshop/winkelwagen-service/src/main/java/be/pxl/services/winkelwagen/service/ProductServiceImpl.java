@@ -1,6 +1,6 @@
 package be.pxl.services.winkelwagen.service;
 
-import be.pxl.services.winkelwagen.controller.dto.ProductDto;
+import be.pxl.services.winkelwagen.service.dto.ProductDto;
 import be.pxl.services.winkelwagen.domain.Product;
 import be.pxl.services.winkelwagen.repository.ProductRepository;
 import be.pxl.services.winkelwagen.service.exception.ResourceNotFoundException;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
@@ -42,7 +42,6 @@ public class ProductServiceImpl implements ProductService {
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
-        product.setSellerProductId(productDto.getSellerProductId());
         var result = productRepository.save(product);
         return ProductDto.fromProduct(result);
     }

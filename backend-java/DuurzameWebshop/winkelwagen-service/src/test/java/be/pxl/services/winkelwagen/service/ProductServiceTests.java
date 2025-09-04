@@ -1,6 +1,6 @@
 package be.pxl.services.winkelwagen.service;
 
-import be.pxl.services.winkelwagen.controller.dto.ProductDto;
+import be.pxl.services.winkelwagen.service.dto.ProductDto;
 import be.pxl.services.winkelwagen.domain.Product;
 import be.pxl.services.winkelwagen.repository.ProductRepository;
 import be.pxl.services.winkelwagen.service.builder.ProductMockBuilder;

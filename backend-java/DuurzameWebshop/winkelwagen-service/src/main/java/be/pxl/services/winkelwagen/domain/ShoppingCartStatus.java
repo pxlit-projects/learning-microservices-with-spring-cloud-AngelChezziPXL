@@ -1,7 +1,6 @@
 package be.pxl.services.winkelwagen.domain;
 
-public enum CartStatus {
+public enum ShoppingCartStatus {
     ACTIVE,
-    CHECK_OUT,
-    ABANDONED
+    CHECK_OUT
 }

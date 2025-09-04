@@ -1,6 +1,6 @@
-package be.pxl.services.winkelwagen.controller.dto;
+package be.pxl.services.winkelwagen.service.dto;
 
-import be.pxl.services.winkelwagen.domain.CartItem;
+import be.pxl.services.winkelwagen.domain.Item;
 import be.pxl.services.winkelwagen.domain.ShoppingCart;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,13 +17,13 @@ import java.util.List;
 public class ShoppingCartDto {
     private Long id;
     private long userId;
-    private List<CartItemDto> cartItemDtos = new ArrayList<>();
+    private List<ItemDto> itemDtos = new ArrayList<>();
 
 
     public double calculateTotalAmount(){
         double total = 0;
-        for (CartItemDto cartItemDto : cartItemDtos) {
-            total += cartItemDto.getQuantity() * cartItemDto.getProductDto().getPrice();
+        for (ItemDto itemDto : itemDtos) {
+            total += itemDto.getQuantity() * itemDto.getProductDto().getPrice();
         }
         return total;
     }
@@ -32,25 +32,25 @@ public class ShoppingCartDto {
         ShoppingCartDto dto = new ShoppingCartDto();
         dto.setId(shoppingCart.getId());
         dto.setUserId(shoppingCart.getUserId());
-        List<CartItemDto> cartItemDtos = new ArrayList<>();
-        for (CartItem cartItem : shoppingCart.getCartItems()) {
-            CartItemDto cartItemDto = CartItemDto.fromCartItem(cartItem);
-            cartItemDtos.add(cartItemDto);
+        List<ItemDto> itemDtos = new ArrayList<>();
+        for (Item item : shoppingCart.getItems()) {
+            ItemDto itemDto = ItemDto.fromCartItem(item);
+            itemDtos.add(itemDto);
         }
-        dto.setCartItemDtos(cartItemDtos);
+        dto.setItemDtos(itemDtos);
         return dto;
     }
 
     public ShoppingCart ToShoppingCart() {
-        List<CartItem> cartItems = new ArrayList<>();
-        for (CartItemDto cartItemDto : this.cartItemDtos) {
-            cartItems.add(cartItemDto.toCartItem());
+        List<Item> items = new ArrayList<>();
+        for (ItemDto itemDto : this.itemDtos) {
+            items.add(itemDto.toCartItem());
         }
 
         ShoppingCart shoppingCart = ShoppingCart.builder()
                 .id(this.id)
                 .userId(this.userId)
-                .cartItems(cartItems)
+                .items(items)
                 .build();
         return shoppingCart;
     }

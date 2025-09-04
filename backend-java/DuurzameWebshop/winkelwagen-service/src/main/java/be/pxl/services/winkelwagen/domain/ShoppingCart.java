@@ -19,31 +19,29 @@ public class ShoppingCart {
     private Long id;
     private long userId;
     @ManyToMany
-    @JoinTable(
-            name= "shoppingcart_cartitem",
-            joinColumns = @JoinColumn(name= "cart_id"),
-            inverseJoinColumns = @JoinColumn(name= "item_id")
-    )
-    private List<CartItem> cartItems = new ArrayList<>();
+    @JoinTable(name= "shoppingcart_item", joinColumns = @JoinColumn(name= "cart_id"), inverseJoinColumns = @JoinColumn(name= "item_id"))
+    private List<Item> items = new ArrayList<>();
 
+
+    //Methods
     public double calculateTotalAmount() {
         double total = 0;
-        for(CartItem cartItem : cartItems) {
-            total += cartItem.getProduct().getPrice() * cartItem.getQuantity();
+        for(Item item : items) {
+            total += item.getProduct().getPrice() * item.getQuantity();
         }
         return total;
     }
 
-    public void addShoppingCartItem(CartItem cartItem) {
-        if(cartItems.contains(cartItem)) {return;}
-        cartItems.add(cartItem);
-        cartItem.addShoppingCart(this);
+    public void addShoppingCartItem(Item item) {
+        if(items.contains(item)) {return;}
+        items.add(item);
+        item.addShoppingCart(this);
     }
 
-    public void removeShoppingCartItem(CartItem cartItem) {
-        if(!cartItems.contains(cartItem)) {return;}
-        cartItems.remove(cartItem);
-        cartItem.removeShoppingCart(this);
+    public void removeShoppingCartItem(Item item) {
+        if(!items.contains(item)) {return;}
+        items.remove(item);
+        item.removeShoppingCart(this);
     }
 
     @Override
