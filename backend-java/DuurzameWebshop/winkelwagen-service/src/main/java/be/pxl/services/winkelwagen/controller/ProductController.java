@@ -3,6 +3,8 @@ package be.pxl.services.winkelwagen.controller;
 import be.pxl.services.winkelwagen.controller.dto.ProductDto;
 import be.pxl.services.winkelwagen.domain.Product;
 import be.pxl.services.winkelwagen.service.ProductService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import jdk.jfr.StackTrace;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -26,5 +28,17 @@ public class ProductController {
     @GetMapping
     public List<ProductDto> getProducts() {
         return productService.getAll();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping
+    public ProductDto updateProduct(@RequestBody @Valid ProductDto productDto) {
+        return productService.updateProduct(productDto);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
     }
 }
