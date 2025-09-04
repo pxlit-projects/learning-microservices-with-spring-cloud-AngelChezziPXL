@@ -1,9 +1,11 @@
 package be.pxl.services.productcatalog.service;
 
+import be.pxl.services.productcatalog.client.NotificationClient;
 import be.pxl.services.productcatalog.domain.Category;
 import be.pxl.services.productcatalog.domain.Product;
 import be.pxl.services.productcatalog.controller.dto.ProductRequest;
 import be.pxl.services.productcatalog.controller.dto.ProductResponse;
+import be.pxl.services.productcatalog.domain.dto.NotificationRequest;
 import be.pxl.services.productcatalog.exception.ResourceNotFoundException;
 import be.pxl.services.productcatalog.repository.CategoryRepository;
 import be.pxl.services.productcatalog.repository.ProductRepository;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final NotificationClient notificationClient;            //TODO: replace later with correct ms clients
 
     @Override
     public List<ProductResponse> findAll() {
@@ -34,6 +37,10 @@ public class ProductService implements IProductService {
     @Override
     public void addProduct(ProductRequest productRequest) {
         productRepository.save(mapProductRequestToProduct(productRequest));
+        NotificationRequest notificationRequest =
+                NotificationRequest.builder().message("new product created.").sender("product-service").build();
+
+        notificationClient.sendNotification(notificationRequest);
     }
 
     public void updateProduct(Long id, ProductRequest productRequest) {

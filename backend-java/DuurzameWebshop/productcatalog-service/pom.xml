@@ -29,7 +29,13 @@
             <scope>runtime</scope>
         </dependency>
 
-<!--        dependencies for the test container-->
+<!--    Dependency OpenFeign for communication between microservices-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!--        dependencies for the test container-->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>mysql</artifactId>
