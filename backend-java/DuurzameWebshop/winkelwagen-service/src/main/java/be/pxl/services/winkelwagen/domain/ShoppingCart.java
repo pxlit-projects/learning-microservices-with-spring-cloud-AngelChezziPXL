@@ -18,6 +18,8 @@ public class ShoppingCart {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private long userId;
+    @Enumerated(EnumType.STRING)
+    private ShoppingCartStatus status;
     @ManyToMany
     @JoinTable(name= "shoppingcart_item", joinColumns = @JoinColumn(name= "cart_id"), inverseJoinColumns = @JoinColumn(name= "item_id"))
     private List<Item> items = new ArrayList<>();

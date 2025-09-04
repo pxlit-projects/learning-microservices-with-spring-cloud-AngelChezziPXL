@@ -14,6 +14,7 @@ import java.util.List;
 public class ItemDto {
 
     private Long id;
+    private Long productId;
     private ProductDto productDto;
     private int quantity;
     List<ShoppingCartDto> shoppingCartDtos = new ArrayList<>();
@@ -21,6 +22,7 @@ public class ItemDto {
     public static ItemDto fromCartItem(Item item) {
         ItemDto itemDto = new ItemDto();
         itemDto.setId(item.getId());
+        itemDto.setProductId(item.getProductId());
         itemDto.setProductDto(ProductDto.fromProduct(item.getProduct()));
         itemDto.setQuantity(item.getQuantity());
         List<ShoppingCartDto> shoppingCartDtos = new ArrayList<>();
@@ -34,6 +36,7 @@ public class ItemDto {
     public Item toCartItem() {
         Item item = new Item();
         item.setId(id);
+        item.setProductId(productId);
         item.setProduct(ProductDto.toProduct(productDto));
         item.setQuantity(quantity);
         List<ShoppingCart> carts = new ArrayList<>();

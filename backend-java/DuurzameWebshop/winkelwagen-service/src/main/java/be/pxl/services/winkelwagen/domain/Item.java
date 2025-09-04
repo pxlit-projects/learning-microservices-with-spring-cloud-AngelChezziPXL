@@ -18,7 +18,9 @@ import java.util.Objects;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(unique = true, nullable = false)
     private Long id;
+    @Column(unique = true, nullable = false)
     private Long productId;
     @Transient
     private Product product;

@@ -32,12 +32,14 @@ public class ShoppingCartDto {
         ShoppingCartDto dto = new ShoppingCartDto();
         dto.setId(shoppingCart.getId());
         dto.setUserId(shoppingCart.getUserId());
+
         List<ItemDto> itemDtos = new ArrayList<>();
         for (Item item : shoppingCart.getItems()) {
             ItemDto itemDto = ItemDto.fromCartItem(item);
             itemDtos.add(itemDto);
         }
         dto.setItemDtos(itemDtos);
+
         return dto;
     }
 
