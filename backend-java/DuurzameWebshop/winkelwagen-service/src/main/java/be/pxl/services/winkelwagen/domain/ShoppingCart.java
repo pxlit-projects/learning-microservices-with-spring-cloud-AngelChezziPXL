@@ -18,23 +18,33 @@ public class ShoppingCart {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private long userId;
-    private double totalAmount;
     @ManyToMany
     @JoinTable(
-            name= "shopping_cart_item",
+            name= "shoppingcart_cartitem",
             joinColumns = @JoinColumn(name= "cart_id"),
             inverseJoinColumns = @JoinColumn(name= "item_id")
     )
-    private List<ShoppingCartItem> shoppingCartItems = new ArrayList<>();
+    private List<CartItem> cartItems = new ArrayList<>();
 
-    public void addItemToCart(ShoppingCartItem shoppingCartItem) {
-        shoppingCartItems.add(shoppingCartItem);
+    public double calculateTotalAmount() {
+        double total = 0;
+        for(CartItem cartItem : cartItems) {
+            total += cartItem.getProduct().getPrice() * cartItem.getQuantity();
+        }
+        return total;
     }
 
-    public void removeItemFromCart(ShoppingCartItem shoppingCartItem) {
-        shoppingCartItems.remove(shoppingCartItem);
+    public void addShoppingCartItem(CartItem cartItem) {
+        if(cartItems.contains(cartItem)) {return;}
+        cartItems.add(cartItem);
+        cartItem.addShoppingCart(this);
     }
 
+    public void removeShoppingCartItem(CartItem cartItem) {
+        if(!cartItems.contains(cartItem)) {return;}
+        cartItems.remove(cartItem);
+        cartItem.removeShoppingCart(this);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -46,4 +56,5 @@ public class ShoppingCart {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
 }
