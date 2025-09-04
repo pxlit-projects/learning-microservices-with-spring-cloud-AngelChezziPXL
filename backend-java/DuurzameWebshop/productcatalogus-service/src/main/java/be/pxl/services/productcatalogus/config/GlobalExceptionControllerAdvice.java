@@ -2,7 +2,7 @@ package be.pxl.services.productcatalogus.config;
 
 import be.pxl.services.productcatalogus.controller.dto.ApiError;
 import be.pxl.services.productcatalogus.exception.ConflictException;
-import be.pxl.services.productcatalogus.exception.ResourceNotFoundExeception;
+import be.pxl.services.productcatalogus.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionControllerAdvice {
-    @ExceptionHandler({ResourceNotFoundExeception.class})
-    public ResponseEntity<Object> handleResourceNotFoundExeception(ResourceNotFoundExeception ex, HttpServletRequest request) {
+    @ExceptionHandler({ResourceNotFoundException.class})
+    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest request) {
         ApiError error = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI());
         return ResponseEntity
                 .status(error.getStatus())
