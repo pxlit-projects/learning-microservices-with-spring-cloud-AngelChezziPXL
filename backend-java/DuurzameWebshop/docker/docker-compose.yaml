@@ -1,10 +1,10 @@
-name: java_mysql
+name: java_fullstack_mysql_containers
 
 services:
     
-    java_mysql_exam:
+    java_fullstack_mysql:
         image: mysql:8.3
-        container_name: java_mysql_exam_container
+        container_name: java_fullstack_mysql_container
         ports:
             - "3306:3306"
         environment:
@@ -13,24 +13,24 @@ services:
             MYSQL_PASSWORD: "password"
             #MYSQL_DATABASE: "employeeservice_db"               databases will be created by the init.sql script
         networks: 
-            - java_exam_network
+            - java_fullstack_network
         volumes:
             - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-            - java_mysql_exam_volume:/var/lib/mysql
+            - java_fullstack_mysql_volume:/var/lib/mysql
         
-    phpmyadmin_java_exam:
+    phpmyadmin_java_fullstack:
         image: phpmyadmin
-        container_name: java_phpmyadmin_exam_container
+        container_name: java_fullstack_phpmyadmin_container
         ports:
             - "8085:80"
         environment:
-            PMA_HOST: java_mysql_exam_container
+            PMA_HOST: java_fullstack_mysql_container
         networks:
-            - java_exam_network
+            - java_fullstack_network
 
 networks:
-    java_exam_network:
+    java_fullstack_network:
 
 volumes:
-    java_mysql_exam_volume:
-        name: "java_mysql_exam_volume"
+    java_fullstack_mysql_volume:
+        name: "java_fullstack_mysql_volume"
