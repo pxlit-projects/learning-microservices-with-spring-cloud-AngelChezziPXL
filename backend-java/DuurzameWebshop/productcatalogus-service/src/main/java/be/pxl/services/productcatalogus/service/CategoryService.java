@@ -5,7 +5,7 @@ import be.pxl.services.productcatalogus.domain.Category;
 import be.pxl.services.productcatalogus.controller.dto.CategoryRecord;
 import be.pxl.services.productcatalogus.controller.dto.CategoryRequest;
 import be.pxl.services.productcatalogus.exception.ConflictException;
-import be.pxl.services.productcatalogus.exception.ResourceNotFoundExeception;
+import be.pxl.services.productcatalogus.exception.ResourceNotFoundException;
 import be.pxl.services.productcatalogus.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,14 +25,14 @@ public class CategoryService implements ICategoryService {
     @Override
     public CategoryRecord findCategoryById(Long id) {
         Category category =categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundExeception("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         return this.mapCategoryToCategoryRecord(category);
     }
 
     @Override
     public CategoryRecord findCategoryByName(String name) {
         Category category =categoryRepository.findByName(name.toLowerCase())
-                .orElseThrow(() -> new ResourceNotFoundExeception("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         return this.mapCategoryToCategoryRecord(category);
     }
 
@@ -50,9 +50,9 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public void updateCategoryName(Long id, String categoryName) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundExeception("Category with id = " + id + " not found"));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category with id = " + id + " not found"));
         if (category == null) {
-            throw new ResourceNotFoundExeception("Category with id " + id + " not found");
+            throw new ResourceNotFoundException("Category with id " + id + " not found");
         }
         if(categoryRepository.findByName(categoryName.toLowerCase()).orElse(null) != null) {
             throw new ConflictException("Category with name " + categoryName + " already exists");
@@ -65,7 +65,7 @@ public class CategoryService implements ICategoryService {
 
     public void deleteCategoryById(Long id) {
         Category category = categoryRepository.findById(id).orElse( null   );
-        if(category == null) throw new ResourceNotFoundExeception("Category with id = " + id + " not found");
+        if(category == null) throw new ResourceNotFoundException("Category with id = " + id + " not found");
         categoryRepository.deleteById(id);
     }
 

@@ -4,7 +4,7 @@ import be.pxl.services.productcatalogus.domain.Category;
 import be.pxl.services.productcatalogus.domain.Product;
 import be.pxl.services.productcatalogus.controller.dto.ProductRequest;
 import be.pxl.services.productcatalogus.controller.dto.ProductResponse;
-import be.pxl.services.productcatalogus.exception.ResourceNotFoundExeception;
+import be.pxl.services.productcatalogus.exception.ResourceNotFoundException;
 import be.pxl.services.productcatalogus.repository.CategoryRepository;
 import be.pxl.services.productcatalogus.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class ProductService implements IProductService {
     public ProductResponse findById(Long id) {
         Product product = productRepository
                 .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundExeception(String.format("Product with id %s not found", id)));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Product with id %s not found", id)));
         return this.mapProductToProductResponse(product);
     }
 
@@ -37,7 +37,7 @@ public class ProductService implements IProductService {
     }
 
     public void updateProduct(Long id, ProductRequest productRequest) {
-        Product product = productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundExeception(String.format("Product with id %s not found", id)));
+        Product product = productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("Product with id %s not found", id)));
         Product updatedProduct = mapProductRequestToProduct(productRequest);
         updatedProduct.setId(product.getId());
         productRepository.save(updatedProduct);
@@ -46,7 +46,7 @@ public class ProductService implements IProductService {
     @Override
     public void deleteProduct(Long id) {
         if(!productRepository.existsById(id)) {
-            throw new ResourceNotFoundExeception(String.format("Product with id %s not found", id));
+            throw new ResourceNotFoundException(String.format("Product with id %s not found", id));
         }
         productRepository.deleteById(id
         );
@@ -55,7 +55,7 @@ public class ProductService implements IProductService {
     // helper methods (CUSTOM MAPPER)
     private Product mapProductRequestToProduct(ProductRequest productRequest) {
         String categoryName = productRequest.getCategoryName().trim().toLowerCase();
-        Category category = categoryRepository.findByName(categoryName).orElseThrow(() -> new ResourceNotFoundExeception(String.format("Category %s does not exist in the database", categoryName)));
+        Category category = categoryRepository.findByName(categoryName).orElseThrow(() -> new ResourceNotFoundException(String.format("Category %s does not exist in the database", categoryName)));
         return Product.builder()
                 .name(productRequest.getName())
                 .description(productRequest.getDescription())

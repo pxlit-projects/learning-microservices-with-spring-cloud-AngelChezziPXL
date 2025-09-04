@@ -5,7 +5,7 @@ import be.pxl.services.productcatalogus.controller.dto.CategoryRecord;
 import be.pxl.services.productcatalogus.controller.dto.CategoryRequest;
 import be.pxl.services.productcatalogus.domain.Category;
 import be.pxl.services.productcatalogus.exception.ConflictException;
-import be.pxl.services.productcatalogus.exception.ResourceNotFoundExeception;
+import be.pxl.services.productcatalogus.exception.ResourceNotFoundException;
 import be.pxl.services.productcatalogus.repository.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -64,10 +64,10 @@ public class CategoryServiceTests {
         //ARRANGE
         Long invalidId = 1L;
         Category category = categoryBuilder.withId(invalidId).build();
-        Mockito.when(categoryRepositoryMock.findById(invalidId)).thenThrow(new ResourceNotFoundExeception(String.format("Category with id %d not found", invalidId)));
+        Mockito.when(categoryRepositoryMock.findById(invalidId)).thenThrow(new ResourceNotFoundException(String.format("Category with id %d not found", invalidId)));
 
         //ACT & ASSERT
-        ResourceNotFoundExeception ex = Assertions.assertThrows(ResourceNotFoundExeception.class,() -> categoryService.findCategoryById(invalidId));
+        ResourceNotFoundException ex = Assertions.assertThrows(ResourceNotFoundException.class,() -> categoryService.findCategoryById(invalidId));
         Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findById(invalidId);
         Assertions.assertTrue(ex.getMessage().contains(String.format("%d not found", invalidId)));
     }
@@ -95,10 +95,10 @@ public class CategoryServiceTests {
         //ARRANGE
         String invalidName = "invalid category";
         Category category = categoryBuilder.withName(invalidName).build();
-        Mockito.when(categoryRepositoryMock.findByName(invalidName)).thenThrow(new ResourceNotFoundExeception(String.format("Category with name %s not found", invalidName)));
+        Mockito.when(categoryRepositoryMock.findByName(invalidName)).thenThrow(new ResourceNotFoundException(String.format("Category with name %s not found", invalidName)));
 
         //ACT & ASSERT
-        ResourceNotFoundExeception ex = Assertions.assertThrows(ResourceNotFoundExeception.class,() -> categoryService.findCategoryByName(invalidName));
+        ResourceNotFoundException ex = Assertions.assertThrows(ResourceNotFoundException.class,() -> categoryService.findCategoryByName(invalidName));
         Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findByName(invalidName);
         Assertions.assertTrue(ex.getMessage().contains(String.format("%s not found", invalidName)));
     }
@@ -168,10 +168,10 @@ public class CategoryServiceTests {
         //ARRANGE
         Long invalidId = 1L;
         Category category = categoryBuilder.withId(invalidId).build();
-        Mockito.when(categoryRepositoryMock.findById(invalidId)).thenThrow(new ResourceNotFoundExeception(String.format("Category with id %d not found", invalidId)));
+        Mockito.when(categoryRepositoryMock.findById(invalidId)).thenThrow(new ResourceNotFoundException(String.format("Category with id %d not found", invalidId)));
 
         //ACT & ASSERT
-        ResourceNotFoundExeception ex = Assertions.assertThrows(ResourceNotFoundExeception.class,() -> categoryService.updateCategoryName(invalidId, Mockito.anyString()));
+        ResourceNotFoundException ex = Assertions.assertThrows(ResourceNotFoundException.class,() -> categoryService.updateCategoryName(invalidId, Mockito.anyString()));
         Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findById(invalidId);
         Assertions.assertTrue(ex.getMessage().contains(String.format("%d not found", invalidId)));
         Mockito.verify(categoryRepositoryMock, Mockito.never()).save(Mockito.any(Category.class));
@@ -203,7 +203,7 @@ public class CategoryServiceTests {
         Mockito.when(categoryRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         //ACT & ASSERT
-        ResourceNotFoundExeception ex = Assertions.assertThrows(ResourceNotFoundExeception.class,() -> categoryService.deleteCategoryById(invalidId));
+        ResourceNotFoundException ex = Assertions.assertThrows(ResourceNotFoundException.class,() -> categoryService.deleteCategoryById(invalidId));
         Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findById(invalidId);
         Assertions.assertTrue(ex.getMessage().contains(invalidId.toString()));
         Assertions.assertTrue(ex.getMessage().contains("not found"));

@@ -5,7 +5,7 @@ import be.pxl.services.productcatalogus.builders.ProductBuilder;
 import be.pxl.services.productcatalogus.domain.Product;
 import be.pxl.services.productcatalogus.controller.dto.ProductRequest;
 import be.pxl.services.productcatalogus.controller.dto.ProductResponse;
-import be.pxl.services.productcatalogus.exception.ResourceNotFoundExeception;
+import be.pxl.services.productcatalogus.exception.ResourceNotFoundException;
 import be.pxl.services.productcatalogus.repository.CategoryRepository;
 import be.pxl.services.productcatalogus.repository.ProductRepository;
 import org.junit.jupiter.api.Assertions;
@@ -78,7 +78,7 @@ public class ProductServiceTests {
         Mockito.when(productRepositoryMock.findById(invalidId)).thenReturn(Optional.empty());
 
         //ACT and ASSERT
-        var ex = Assertions.assertThrows(ResourceNotFoundExeception.class, () -> productService.findById(invalidId));
+        var ex = Assertions.assertThrows(ResourceNotFoundException.class, () -> productService.findById(invalidId));
         Mockito.verify(productRepositoryMock, Mockito.times(1)).findById(invalidId);
     }
 
@@ -123,11 +123,11 @@ public class ProductServiceTests {
         //ARRANGE
         long invalidId = 1L;
         Product product = productBuilder.withId(invalidId).build();
-        Mockito.when(productRepositoryMock.findById(invalidId)).thenThrow(new ResourceNotFoundExeception(String.format("Product with id %s not found.", invalidId)));
+        Mockito.when(productRepositoryMock.findById(invalidId)).thenThrow(new ResourceNotFoundException(String.format("Product with id %s not found.", invalidId)));
         ProductRequest productRequest = mapProductToProductRequest(product);
 
         //ACT & ASSERT
-        Assertions.assertThrows(ResourceNotFoundExeception.class, () -> productService.updateProduct(invalidId, productRequest));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> productService.updateProduct(invalidId, productRequest));
         Mockito.verify(productRepositoryMock, Mockito.times(1)).findById(invalidId);
         Mockito.verify(categoryRepositoryMock, Mockito.never()).findByName(Mockito.anyString());
         Mockito.verify(productRepositoryMock, Mockito.never()).save(Mockito.any(Product.class));
@@ -151,10 +151,10 @@ public class ProductServiceTests {
     public void deleteProduct_InValidId_ShouldThrowResourceNotFoundException() throws Exception {
         //ARRANGE
         long invalidId = 1L;
-        Mockito.when(productRepositoryMock.existsById(invalidId)).thenThrow(new ResourceNotFoundExeception(String.format("Product with id %s not found.", invalidId)));
+        Mockito.when(productRepositoryMock.existsById(invalidId)).thenThrow(new ResourceNotFoundException(String.format("Product with id %s not found.", invalidId)));
 
         //ACT & ASSERT
-        Assertions.assertThrows(ResourceNotFoundExeception.class, () -> productService.deleteProduct(invalidId));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> productService.deleteProduct(invalidId));
         Mockito.verify(productRepositoryMock, Mockito.times(1)).existsById(invalidId);
     }
 
