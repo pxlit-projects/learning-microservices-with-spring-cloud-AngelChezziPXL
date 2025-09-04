@@ -4,7 +4,7 @@ import be.pxl.services.productcatalogus.builders.CategoryBuilder;
 import be.pxl.services.productcatalogus.controller.dto.CategoryRecord;
 import be.pxl.services.productcatalogus.controller.dto.CategoryRequest;
 import be.pxl.services.productcatalogus.exception.ConflictException;
-import be.pxl.services.productcatalogus.exception.ResourceNotFoundExeception;
+import be.pxl.services.productcatalogus.exception.ResourceNotFoundException;
 import be.pxl.services.productcatalogus.service.ICategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -80,7 +80,7 @@ public class CategoryControllerTest {
         String requestURL = CATEGORY_URL + "/" + invalidId;
         String name = "category name";
         CategoryRecord categoryRecord = new CategoryRecord(invalidId, name);
-        Mockito.when(categoryServiceMock.findCategoryById(Mockito.anyLong())).thenThrow(new ResourceNotFoundExeception("Id " + invalidId + " not found"));
+        Mockito.when(categoryServiceMock.findCategoryById(Mockito.anyLong())).thenThrow(new ResourceNotFoundException("Id " + invalidId + " not found"));
 
         //ACT & ASSERT
         var response = mockMvc.perform(get(requestURL))
@@ -149,7 +149,7 @@ public class CategoryControllerTest {
         CategoryRequest categoryRequest = new CategoryRequest();
         categoryRequest.setCategoryName(validName);
 
-        Mockito.doThrow(new ResourceNotFoundExeception("Id " + invalidId + "not found.") ).when(categoryServiceMock).updateCategoryName(Mockito.anyLong(), Mockito.anyString());
+        Mockito.doThrow(new ResourceNotFoundException("Id " + invalidId + "not found.") ).when(categoryServiceMock).updateCategoryName(Mockito.anyLong(), Mockito.anyString());
 
         //ACT & ASSERT
         var response = mockMvc.perform(put(requestURL)
@@ -201,7 +201,7 @@ public class CategoryControllerTest {
         Long invalidId = 1L;
         String requestURL = CATEGORY_URL + "/" + invalidId;
 
-        Mockito.doThrow(new ResourceNotFoundExeception("Category with id " + invalidId + " not found.")).when(categoryServiceMock).deleteCategoryById(invalidId);
+        Mockito.doThrow(new ResourceNotFoundException("Category with id " + invalidId + " not found.")).when(categoryServiceMock).deleteCategoryById(invalidId);
 
         //ACT & ASSERT
         var response = mockMvc.perform(delete(requestURL))
