@@ -7,11 +7,11 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>be.pxl.services.winkelwagen</groupId>
+    <groupId>be.pxl.services.shoppingcart</groupId>
     <artifactId>shoppingcart-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>winkelwagen-service</name>
+    <name>shoppingcart-service</name>
     <url>http://maven.apache.org</url>
 
     <properties>

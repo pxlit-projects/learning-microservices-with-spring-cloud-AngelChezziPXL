@@ -7,11 +7,11 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>be.pxl.services.productCatalogus</groupId>
+    <groupId>be.pxl.services.productcatalog</groupId>
     <artifactId>productcatalog-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>productCatalogus-service</name>
+    <name>productcatalog-service</name>
     <url>http://maven.apache.org</url>
 
     <properties>

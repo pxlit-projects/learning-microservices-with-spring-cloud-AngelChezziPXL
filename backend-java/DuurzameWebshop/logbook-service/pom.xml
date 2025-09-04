@@ -7,11 +7,11 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>be.pxl.services.logboek</groupId>
+    <groupId>be.pxl.services.logbook</groupId>
     <artifactId>logbook-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>logboek-service</name>
+    <name>logbook-service</name>
     <url>http://maven.apache.org</url>
 
     <properties>
