@@ -42,7 +42,16 @@ public class ProductMockBuilder {
         product.setDescription(description);
         return this;
     }
-
+    public Product makeDuplicateProductObject(Product product){
+        Product duplicateProduct = new Product();
+        duplicateProduct.setId(product.getId());
+        duplicateProduct.setSellerProductId(product.getSellerProductId());
+        duplicateProduct.setName(product.getName());
+        duplicateProduct.setDescription(product.getDescription());
+        duplicateProduct.setPrice(product.getPrice());
+        duplicateProduct.setSellerProductId(product.getSellerProductId());
+        return duplicateProduct;
+    }
     public Product build(){
         return this.product;
     }
