@@ -30,4 +30,16 @@ public class CartItemDto {
         cartItemDto.setShoppingCartDtos(shoppingCartDtos);
         return cartItemDto;
     }
+
+    public CartItem toCartItem() {
+        CartItem cartItem = new CartItem();
+        cartItem.setId(id);
+        cartItem.setProduct(ProductDto.toProduct(productDto));
+        cartItem.setQuantity(quantity);
+        List<ShoppingCart> carts = new ArrayList<>();
+        for(ShoppingCartDto cartDto : shoppingCartDtos){
+            carts.add(cartDto.ToShoppingCart());
+        }
+        return cartItem;
+    }
 }

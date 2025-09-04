@@ -24,4 +24,14 @@ public class ProductDto {
         productDto.setPrice(product.getPrice());
         return productDto;
     }
+
+    public static Product toProduct(ProductDto productDto) {
+        Product product = new Product();
+        product.setId(productDto.getId());
+        product.setSellerProductId(productDto.getSellerProductId());
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        return product;
+    }
 }

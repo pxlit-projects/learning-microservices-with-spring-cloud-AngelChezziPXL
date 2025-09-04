@@ -19,6 +19,7 @@ public class ShoppingCartDto {
     private long userId;
     private List<CartItemDto> cartItemDtos = new ArrayList<>();
 
+
     public double calculateTotalAmount(){
         double total = 0;
         for (CartItemDto cartItemDto : cartItemDtos) {
@@ -38,5 +39,19 @@ public class ShoppingCartDto {
         }
         dto.setCartItemDtos(cartItemDtos);
         return dto;
+    }
+
+    public ShoppingCart ToShoppingCart() {
+        List<CartItem> cartItems = new ArrayList<>();
+        for (CartItemDto cartItemDto : this.cartItemDtos) {
+            cartItems.add(cartItemDto.toCartItem());
+        }
+
+        ShoppingCart shoppingCart = ShoppingCart.builder()
+                .id(this.id)
+                .userId(this.userId)
+                .cartItems(cartItems)
+                .build();
+        return shoppingCart;
     }
 }
