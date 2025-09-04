@@ -1,12 +1,12 @@
 package be.pxl.services.winkelwagen.service;
 
 
-import be.pxl.services.winkelwagen.domain.Item;
+import be.pxl.services.winkelwagen.service.dto.ItemDto;
 
 public interface ShoppingCartService {
 
-    void addItem(Item item);
-    void removeItem(Item item);
+    void addItemToShoppingCart(ItemDto itemDto);
+    void removeItemById(Long id);
     void saveWishList();
     void doOrder();
 
