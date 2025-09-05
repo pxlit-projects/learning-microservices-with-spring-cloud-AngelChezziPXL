@@ -8,12 +8,11 @@ spring:
         locator:
           enabled: true
       routes:
-        #catalog Route
+        #ProductCatalog route
         - id: productcatalog-service
           uri: lb://productcatalog-service
           predicates:
             - Path=/product/**
-            - Header=UserId, '^\d+$'                 # positive integer only
           filters:
             - RewritePath=/product/(?<path>.*), /$\{path}
 
@@ -21,8 +20,7 @@ spring:
         - id: shoppingcart-service
           uri: lb://shoppingcart-service
           predicates:
-              - Path=/shoppingcart/**
-              - Header=UserId, '^\d+$'                 # positive integer only
+            - Path=/shoppingcart/**
           filters:
             - RewritePath=/shoppingcart/(?<path>.*), /$\{path}
 
@@ -31,7 +29,6 @@ spring:
           uri: lb://whishlist-service
           predicates:
             - Path=/whishlist/**
-            - Header=UserId, '^\d+$'                 # positive integer only
           filters:
             - RewritePath=/whishlist/(?<path>.*), /$\{path}
 
@@ -39,10 +36,10 @@ spring:
         - id: logbook-service
           uri: lb://logbook-service
           predicates:
-            - Path=/product/**
-            - Header=UserId, '^\d+$'                 # positive integer only
+            - Path=/logbook/**
           filters:
             - RewritePath=/logbook/(?<path>.*), /$\{path}
+
 
 eureka:
   client:

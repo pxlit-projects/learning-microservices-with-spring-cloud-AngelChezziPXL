@@ -1,17 +1,19 @@
 package be.pxl.services.productcatalog.service;
 
-import be.pxl.services.productcatalog.client.NotificationClient;
+import be.pxl.services.productcatalog.client.LogbookClient;
 import be.pxl.services.productcatalog.domain.Category;
 import be.pxl.services.productcatalog.domain.Product;
-import be.pxl.services.productcatalog.controller.dto.ProductRequest;
-import be.pxl.services.productcatalog.controller.dto.ProductResponse;
-import be.pxl.services.productcatalog.domain.dto.NotificationRequest;
+import be.pxl.services.productcatalog.domain.dto.ProductRequest;
+import be.pxl.services.productcatalog.domain.dto.ProductResponse;
+import be.pxl.services.productcatalog.domain.dto.LogbookRequest;
+import be.pxl.services.productcatalog.exception.ConflictException;
 import be.pxl.services.productcatalog.exception.ResourceNotFoundException;
 import be.pxl.services.productcatalog.repository.CategoryRepository;
 import be.pxl.services.productcatalog.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +23,8 @@ import java.util.List;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final NotificationClient notificationClient;            //TODO: replace later with correct ms clients
+    private final RabbitTemplate rabbitTemplate;
+    private final LogbookClient logbookClient;            //TODO: replace later with correct ms clients
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
     @Override
@@ -40,20 +43,31 @@ public class ProductService implements IProductService {
 
     @Override
     public void addProduct(ProductRequest productRequest) {
-        log.info("Add product: {}", productRequest);
-        productRepository.save(mapProductRequestToProduct(productRequest));
-        NotificationRequest notificationRequest =
-                NotificationRequest.builder().message("new product created.").sender("product-service").build();
+        long userId = productRequest.getUserId();
+        if(userId == 0) {
+            throw new ConflictException("UserId cannot be null");
+        }
 
-        notificationClient.sendNotification(notificationRequest);
+        log.info("Add product: {}", productRequest);
+        Product product = productRepository.save(mapProductRequestToProduct(productRequest));
+
+        log.info("Setting update on the queue");
+        sendUpdateToLogbookViaRabbitMQ(userId, product.toProductResponse());
     }
 
     public void updateProduct(Long id, ProductRequest productRequest) {
+        long userId = productRequest.getUserId();
+        if(userId == 0) {
+            throw new ConflictException("User id cannot be null");
+        }
         log.info("Update product: {}", productRequest);
         Product product = productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("Product with id %s not found", id)));
         Product updatedProduct = mapProductRequestToProduct(productRequest);
         updatedProduct.setId(product.getId());
         productRepository.save(updatedProduct);
+        log.info("Setting update on the queue");
+        sendUpdateToLogbookViaRabbitMQ(userId, product.toProductResponse());
+
     }
 
     @Override
@@ -94,5 +108,16 @@ public class ProductService implements IProductService {
                 .available(product.isAvailable())
                 .price(product.getPrice())
                 .build();
+    }
+
+    private void sendUpdateToLogbookViaRabbitMQ(Long userId, ProductResponse productResponse) {
+        LogbookRequest logbookRequest = LogbookRequest.builder()
+                .sender("productcatalog-service")
+                .senderId(userId)
+                .productResponse(productResponse)
+                .build();
+        rabbitTemplate.convertAndSend("products-queue", logbookRequest);
+
+
     }
 }

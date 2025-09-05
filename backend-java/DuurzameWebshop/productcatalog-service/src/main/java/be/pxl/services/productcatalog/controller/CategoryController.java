@@ -1,7 +1,7 @@
 package be.pxl.services.productcatalog.controller;
 
-import be.pxl.services.productcatalog.controller.dto.CategoryRecord;
-import be.pxl.services.productcatalog.controller.dto.CategoryRequest;
+import be.pxl.services.productcatalog.domain.dto.CategoryRecord;
+import be.pxl.services.productcatalog.domain.dto.CategoryRequest;
 import be.pxl.services.productcatalog.service.ICategoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;

@@ -1,4 +1,4 @@
-package be.pxl.services.productcatalog.controller.dto;
+package be.pxl.services.productcatalog.controller.model;
 
 import org.springframework.http.HttpStatus;
 

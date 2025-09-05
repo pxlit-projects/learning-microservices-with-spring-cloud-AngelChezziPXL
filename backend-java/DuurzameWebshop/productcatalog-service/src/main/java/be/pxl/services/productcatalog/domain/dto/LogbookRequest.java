@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NotificationRequest {
+public class LogbookRequest {
     private String sender;
-    private String message;
+    private long senderId;
+    private ProductResponse productResponse;
 }

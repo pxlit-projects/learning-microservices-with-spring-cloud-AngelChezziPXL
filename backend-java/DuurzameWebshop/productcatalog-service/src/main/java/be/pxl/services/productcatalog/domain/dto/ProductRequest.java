@@ -1,4 +1,4 @@
-package be.pxl.services.productcatalog.controller.dto;
+package be.pxl.services.productcatalog.domain.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductRequest {
+    private long userId;
     //private Long id;
     @NotNull(message= "Product name cannot be empty.")
     private String name;

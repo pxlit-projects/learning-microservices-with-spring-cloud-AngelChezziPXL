@@ -1,7 +1,7 @@
 package be.pxl.services.productcatalog.service;
 
-import be.pxl.services.productcatalog.controller.dto.ProductRequest;
-import be.pxl.services.productcatalog.controller.dto.ProductResponse;
+import be.pxl.services.productcatalog.domain.dto.ProductRequest;
+import be.pxl.services.productcatalog.domain.dto.ProductResponse;
 
 import java.util.List;
 

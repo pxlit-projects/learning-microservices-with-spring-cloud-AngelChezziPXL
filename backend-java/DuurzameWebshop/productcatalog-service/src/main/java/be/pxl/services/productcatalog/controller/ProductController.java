@@ -1,7 +1,7 @@
 package be.pxl.services.productcatalog.controller;
 
-import be.pxl.services.productcatalog.controller.dto.ProductRequest;
-import be.pxl.services.productcatalog.controller.dto.ProductResponse;
+import be.pxl.services.productcatalog.domain.dto.ProductRequest;
+import be.pxl.services.productcatalog.domain.dto.ProductResponse;
 import be.pxl.services.productcatalog.service.IProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
     private final IProductService productService;
+    private Long userId = 1L;           //TODO: adapt to take it from the header
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)                  // nodig voor de ShoppingCart MS

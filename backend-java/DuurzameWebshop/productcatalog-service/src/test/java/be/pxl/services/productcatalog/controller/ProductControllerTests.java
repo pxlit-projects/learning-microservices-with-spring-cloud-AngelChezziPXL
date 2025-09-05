@@ -1,7 +1,7 @@
 package be.pxl.services.productcatalog.controller;
 
-import be.pxl.services.productcatalog.controller.dto.ProductRequest;
-import be.pxl.services.productcatalog.controller.dto.ProductResponse;
+import be.pxl.services.productcatalog.domain.dto.ProductRequest;
+import be.pxl.services.productcatalog.domain.dto.ProductResponse;
 import be.pxl.services.productcatalog.service.IProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -76,7 +76,7 @@ class ProductControllerTests {
 
     @Test
     public void createProduct_shouldReturnCreatedStatus() throws Exception {
-        ProductRequest productRequest = new ProductRequest("Product1", "Description1", "category1", true, List.of("tag1", "tag2"), 100.0);
+        ProductRequest productRequest = new ProductRequest(1L,"Product1", "Description1", "category1", true, List.of("tag1", "tag2"), 100.0);
 
         mockMvc.perform(post("/api/product")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -88,7 +88,7 @@ class ProductControllerTests {
 
     @Test
     public void updateProduct_shouldReturnOkStatus() throws Exception {
-        ProductRequest productRequest = new ProductRequest("Product1", "Description1", "category2", true, List.of("tag1", "tag2","newTag"), 150.0);
+        ProductRequest productRequest = new ProductRequest(1L,"Product1", "Description1", "category2", true, List.of("tag1", "tag2","newTag"), 150.0);
 
         mockMvc.perform(put("/api/product/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ class ProductControllerTests {
     @Test
     public void updateProduct_InvalidId_ShouldReturnNotFound() throws Exception {
         long invalidId = 1L;
-        ProductRequest productRequest = new ProductRequest("Product1", "Description1", "category2", true, List.of("tag1", "tag2","newTag"), 150.0);
+        ProductRequest productRequest = new ProductRequest(1L,"Product1", "Description1", "category2", true, List.of("tag1", "tag2","newTag"), 150.0);
 
         Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND,"")).when(productServiceMock).updateProduct(invalidId, productRequest);
 

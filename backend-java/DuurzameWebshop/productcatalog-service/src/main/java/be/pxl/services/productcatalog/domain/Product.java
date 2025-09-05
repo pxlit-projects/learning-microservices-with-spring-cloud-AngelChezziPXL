@@ -1,5 +1,6 @@
 package be.pxl.services.productcatalog.domain;
 
+import be.pxl.services.productcatalog.domain.dto.ProductResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,6 +40,18 @@ public class Product {
         if (!tags.contains(tag)) {
             tags.add(tag);
         }
+    }
+
+    public ProductResponse toProductResponse() {
+        return ProductResponse.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .available(available)
+                .categoryName(category.getName())
+                .tags(tags)
+                .price(price)
+                .build();
     }
 
     @Override

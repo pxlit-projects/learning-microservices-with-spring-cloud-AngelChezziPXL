@@ -28,6 +28,12 @@ services:
         networks:
             - java_fullstack_network
 
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+
 networks:
     java_fullstack_network:
 

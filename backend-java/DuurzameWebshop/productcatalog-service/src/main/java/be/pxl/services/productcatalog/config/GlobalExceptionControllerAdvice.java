@@ -1,6 +1,6 @@
 package be.pxl.services.productcatalog.config;
 
-import be.pxl.services.productcatalog.controller.dto.ApiError;
+import be.pxl.services.productcatalog.controller.model.ApiError;
 import be.pxl.services.productcatalog.exception.ConflictException;
 import be.pxl.services.productcatalog.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;

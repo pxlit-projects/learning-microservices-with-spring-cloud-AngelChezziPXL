@@ -1,7 +1,7 @@
 package be.pxl.services.productcatalog.service;
 
-import be.pxl.services.productcatalog.controller.dto.CategoryRecord;
-import be.pxl.services.productcatalog.controller.dto.CategoryRequest;
+import be.pxl.services.productcatalog.domain.dto.CategoryRecord;
+import be.pxl.services.productcatalog.domain.dto.CategoryRequest;
 
 import java.util.List;
 
