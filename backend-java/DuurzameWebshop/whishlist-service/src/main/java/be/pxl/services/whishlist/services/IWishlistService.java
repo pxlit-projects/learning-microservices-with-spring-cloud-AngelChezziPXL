@@ -1,6 +1,6 @@
-package be.pxl.services.services;
+package be.pxl.services.whishlist.services;
 
-import be.pxl.services.domain.Whishlist;
+import be.pxl.services.whishlist.domain.Whishlist;
 
 import java.util.List;
 

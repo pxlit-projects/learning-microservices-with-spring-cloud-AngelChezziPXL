@@ -1,4 +1,4 @@
-package be.pxl.services.domain;
+package be.pxl.services.whishlist.domain;
 
 public class Product {
     private Long id;

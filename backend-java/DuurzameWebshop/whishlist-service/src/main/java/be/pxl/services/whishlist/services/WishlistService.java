@@ -1,7 +1,7 @@
-package be.pxl.services.services;
+package be.pxl.services.whishlist.services;
 
-import be.pxl.services.domain.Whishlist;
-import be.pxl.services.repository.WishlistRepository;
+import be.pxl.services.whishlist.domain.Whishlist;
+import be.pxl.services.whishlist.repository.WishlistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

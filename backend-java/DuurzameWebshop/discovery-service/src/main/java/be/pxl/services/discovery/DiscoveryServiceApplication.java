@@ -1,4 +1,4 @@
-package be.pxl.services;
+package be.pxl.services.discovery;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
