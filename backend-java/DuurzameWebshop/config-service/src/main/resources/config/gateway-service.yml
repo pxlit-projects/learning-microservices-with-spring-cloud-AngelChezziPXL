@@ -14,7 +14,6 @@ spring:
           predicates:
             - Path=/product/**
             - Header=UserId, '^\d+$'                 # positive integer only
-            - Header=Roles, '(?i)^admin$'            # exact "admin", case-insensitive
           filters:
             - RewritePath=/product/(?<path>.*), /$\{path}
 
@@ -42,7 +41,6 @@ spring:
           predicates:
             - Path=/product/**
             - Header=UserId, '^\d+$'                 # positive integer only
-            - Header=Roles, '(?i)^admin$'            # exact "admin", case-insensitive
           filters:
             - RewritePath=/logbook/(?<path>.*), /$\{path}
 
