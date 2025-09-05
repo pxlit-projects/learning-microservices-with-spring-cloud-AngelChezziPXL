@@ -10,6 +10,8 @@ import be.pxl.services.productcatalog.exception.ResourceNotFoundException;
 import be.pxl.services.productcatalog.repository.CategoryRepository;
 import be.pxl.services.productcatalog.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +22,7 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final NotificationClient notificationClient;            //TODO: replace later with correct ms clients
+    private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
     @Override
     public List<ProductResponse> findAll() {
@@ -28,6 +31,7 @@ public class ProductService implements IProductService {
 
     @Override
     public ProductResponse findById(Long id) {
+        log.info("Find product by id: {}", id);
         Product product = productRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Product with id %s not found", id)));
@@ -36,6 +40,7 @@ public class ProductService implements IProductService {
 
     @Override
     public void addProduct(ProductRequest productRequest) {
+        log.info("Add product: {}", productRequest);
         productRepository.save(mapProductRequestToProduct(productRequest));
         NotificationRequest notificationRequest =
                 NotificationRequest.builder().message("new product created.").sender("product-service").build();
@@ -44,6 +49,7 @@ public class ProductService implements IProductService {
     }
 
     public void updateProduct(Long id, ProductRequest productRequest) {
+        log.info("Update product: {}", productRequest);
         Product product = productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("Product with id %s not found", id)));
         Product updatedProduct = mapProductRequestToProduct(productRequest);
         updatedProduct.setId(product.getId());
@@ -52,6 +58,7 @@ public class ProductService implements IProductService {
 
     @Override
     public void deleteProduct(Long id) {
+        log.info("Delete product with id: {}", id);
         if(!productRepository.existsById(id)) {
             throw new ResourceNotFoundException(String.format("Product with id %s not found", id));
         }
