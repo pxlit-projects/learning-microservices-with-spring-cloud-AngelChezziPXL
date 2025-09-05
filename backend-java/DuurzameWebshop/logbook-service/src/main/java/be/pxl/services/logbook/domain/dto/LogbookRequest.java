@@ -1,4 +1,4 @@
-package be.pxl.services.logbook.domain;
+package be.pxl.services.logbook.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,12 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Notification {
-    private String message;
+@Builder
+public class LogbookRequest {
     private String sender;
+    private long senderId;
+    private ProductResponse productResponse;
 }
-
-//TODO: remove this class. It is just for testing purpose
