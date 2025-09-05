@@ -7,11 +7,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>be.pxl.services.logbook</groupId>
-    <artifactId>logbook-service</artifactId>
+    <artifactId>config-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>logbook-service</name>
+    <name>config-service</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -19,23 +18,9 @@
     </properties>
 
     <dependencies>
-        <!--        dependency for Eureka => Discovery service-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-
-<!--        dependecy to use the config service-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
-        </dependency>
-
-        <!--    Dependency OpenFeign for communication between microservices-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <artifactId>spring-cloud-config-server</artifactId>
         </dependency>
     </dependencies>
-
 </project>

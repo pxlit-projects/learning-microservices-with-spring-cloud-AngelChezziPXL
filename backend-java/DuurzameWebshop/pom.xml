@@ -58,14 +58,6 @@
             <optional>true</optional>
         </dependency>
 
-<!--        dependency for Eureka => Discovery service-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-
-
-
         <!--        Test dependencies-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
