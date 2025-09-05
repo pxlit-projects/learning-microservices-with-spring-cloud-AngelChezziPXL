@@ -8,12 +8,49 @@ spring:
         locator:
           enabled: true
       routes:
+        #catalog Route
         - id: productcatalog-service
           uri: lb://productcatalog-service
           predicates:
             - Path=/product/**
+            # UserId must be a (signed) long: up to 19 digits, optional leading '-'
+            - Header=UserId,'^\d{1,19}$
+            # Roles must contain ADMIN as a token ((^?i)-> case insensative)
+            - Header=Roles, '(?i)^admin$'
           filters:
             - RewritePath=/product/(?<path>.*), /$\{path}
+
+        #Shoppingcart route
+        - id: shoppingcart-service
+          uri: lb://shoppingcart-service
+          predicates:
+              - Path=/shoppingcart/**
+          filters:
+            - RewritePath=/shoppingcart/(?<path>.*), /$\{path}
+            # UserId must be a (signed) long: up to 19 digits, optional leading '-'
+            - Header=UserId,'^\d{1,19}$
+
+        #Whishlist route
+        - id: whishlist-service
+          uri: lb://whishlist-service
+          predicates:
+            - Path=/whishlist/**
+            # UserId must be a (signed) long: up to 19 digits, optional leading '-'
+            - Header=UserId,'^\d{1,19}$
+          filters:
+            - RewritePath=/whishlist/(?<path>.*), /$\{path}
+
+        #catalog Route
+        - id: logbook-service
+          uri: lb://logbook-service
+          predicates:
+            - Path=/product/**
+            # UserId must be a (signed) long: up to 19 digits, optional leading '-'
+            - Header=UserId,'^\d{1,19}$
+            # Roles must contain ADMIN as a token ((^?i)-> case insensative)
+            - Header=Roles, '(?i)^admin$'
+          filters:
+            - RewritePath=/logbook/(?<path>.*), /$\{path}
 
 eureka:
   client:
