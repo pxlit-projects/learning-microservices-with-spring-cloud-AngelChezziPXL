@@ -32,7 +32,7 @@
     </root>
 
     <!-- API module logger: goes also to API_LOGGER -->
-    <logger name="be.pxl.services.config" level="DEBUG" additivity="true">
+    <logger name="be.pxl.services.gateway" level="DEBUG" additivity="true">
         <appender-ref ref="API_LOGGER"/>
     </logger>
 
