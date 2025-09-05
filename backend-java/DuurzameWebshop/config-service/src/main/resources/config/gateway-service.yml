@@ -13,10 +13,8 @@ spring:
           uri: lb://productcatalog-service
           predicates:
             - Path=/product/**
-            # UserId must be a (signed) long: up to 19 digits, optional leading '-'
-            - Header=UserId,'^\d{1,19}$
-            # Roles must contain ADMIN as a token ((^?i)-> case insensative)
-            - Header=Roles, '(?i)^admin$'
+            - Header=UserId, '^\d+$'                 # positive integer only
+            - Header=Roles, '(?i)^admin$'            # exact "admin", case-insensitive
           filters:
             - RewritePath=/product/(?<path>.*), /$\{path}
 
@@ -25,30 +23,26 @@ spring:
           uri: lb://shoppingcart-service
           predicates:
               - Path=/shoppingcart/**
+              - Header=UserId, '^\d+$'                 # positive integer only
           filters:
             - RewritePath=/shoppingcart/(?<path>.*), /$\{path}
-            # UserId must be a (signed) long: up to 19 digits, optional leading '-'
-            - Header=UserId,'^\d{1,19}$
 
         #Whishlist route
         - id: whishlist-service
           uri: lb://whishlist-service
           predicates:
             - Path=/whishlist/**
-            # UserId must be a (signed) long: up to 19 digits, optional leading '-'
-            - Header=UserId,'^\d{1,19}$
+            - Header=UserId, '^\d+$'                 # positive integer only
           filters:
             - RewritePath=/whishlist/(?<path>.*), /$\{path}
 
-        #catalog Route
+        #logbook Route
         - id: logbook-service
           uri: lb://logbook-service
           predicates:
             - Path=/product/**
-            # UserId must be a (signed) long: up to 19 digits, optional leading '-'
-            - Header=UserId,'^\d{1,19}$
-            # Roles must contain ADMIN as a token ((^?i)-> case insensative)
-            - Header=Roles, '(?i)^admin$'
+            - Header=UserId, '^\d+$'                 # positive integer only
+            - Header=Roles, '(?i)^admin$'            # exact "admin", case-insensitive
           filters:
             - RewritePath=/logbook/(?<path>.*), /$\{path}
 
