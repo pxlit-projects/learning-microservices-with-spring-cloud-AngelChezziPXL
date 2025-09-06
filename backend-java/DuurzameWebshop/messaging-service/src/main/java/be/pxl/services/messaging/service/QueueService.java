@@ -5,8 +5,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class QueueService {
-    //@RabbitListener(queues = "myQueue")
+    @RabbitListener(queues = "myQueue")
     public void listen(String in) {
         System.out.println("Message read from myQueue : " + in);
+    }
+
+    @RabbitListener(queues = "product-queue")
+    public void productQueueHandler(String in) {
+        System.out.println("Message read from product-queue : " + in);
     }
 }
