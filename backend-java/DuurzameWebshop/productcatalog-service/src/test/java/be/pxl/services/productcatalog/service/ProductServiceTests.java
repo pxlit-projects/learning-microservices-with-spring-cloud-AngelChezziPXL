@@ -3,7 +3,6 @@ package be.pxl.services.productcatalog.service;
 
 import be.pxl.services.productcatalog.builders.ProductBuilder;
 import be.pxl.services.productcatalog.domain.Product;
-import be.pxl.services.productcatalog.domain.dto.LogbookRequest;
 import be.pxl.services.productcatalog.domain.dto.ProductRequest;
 import be.pxl.services.productcatalog.domain.dto.ProductResponse;
 import be.pxl.services.productcatalog.exception.ResourceNotFoundException;
@@ -16,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +26,6 @@ public class ProductServiceTests {
 
     @Mock
     private ProductRepository productRepositoryMock;
-    @Mock
-    private RabbitTemplate rabbitTemplateMock;
     @Mock
     private CategoryRepository categoryRepositoryMock;
 
@@ -87,7 +83,7 @@ public class ProductServiceTests {
     }
 
     @Test
-    public void addProduct_ShouldSaveProduct() {
+    public void addProduct_ShouldSaveProduct_AndReturnProductResponse() throws Exception {
         //ARRANGE
         Product expectedProduct = productBuilder.withId(1L).build();
         ProductRequest productRequest = mapProductToProductRequest(expectedProduct);
@@ -100,8 +96,8 @@ public class ProductServiceTests {
         productService.addProduct(productRequest);
 
         //ASSERT
-            Mockito.verify(productRepositoryMock, Mockito.times(1)).save(Mockito.any(Product.class));
-            Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findByName(expectedProduct.getCategory().getName());
+        Mockito.verify(productRepositoryMock, Mockito.times(1)).save(Mockito.any(Product.class));
+        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findByName(expectedProduct.getCategory().getName());
     }
 
     @Test
@@ -114,7 +110,6 @@ public class ProductServiceTests {
         Mockito.when(productRepositoryMock.findById(validId)).thenReturn(Optional.of(product));
         Mockito.when(categoryRepositoryMock.findByName(product.getCategory().getName())).thenReturn(Optional.of(product.getCategory()));
         Mockito.when(productRepositoryMock.save(Mockito.any(Product.class))).thenReturn(product);
-        Mockito.doNothing().when(rabbitTemplateMock).convertAndSend(Mockito.any(LogbookRequest.class));
 
         // ACT
         productService.updateProduct(validId, productRequest);
@@ -123,7 +118,6 @@ public class ProductServiceTests {
         Mockito.verify(productRepositoryMock, Mockito.times(1)).findById(validId);
         Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findByName(product.getCategory().getName());
         Mockito.verify(productRepositoryMock, Mockito.times(1)).save(Mockito.any(Product.class));
-        Mockito.verify(rabbitTemplateMock, Mockito.times(1)).convertAndSend(Mockito.any(LogbookRequest.class));
     }
 
     @Test
@@ -178,17 +172,4 @@ public class ProductServiceTests {
                 .build();
         return productRequest;
     }
-    private Product makeDuplicateProductWithoutId(Product product) {
-        Product duplicate = Product.builder()
-                .name(product.getName())
-                .description(product.getDescription())
-                .price(product.getPrice())
-                .available(product.isAvailable())
-                .category(product.getCategory())
-                .tags(product.getTags())
-                .build();
-        return duplicate;
-    }
-
-
 }

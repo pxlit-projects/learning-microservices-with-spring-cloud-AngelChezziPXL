@@ -5,12 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class LogbookRequest {
-    private String sender;
-    private long senderId;
+public class ProductQueueMessage {
+    private long userId;
+    private String serviceName = "productcatalog-service";
+    private LocalDateTime timestamp = LocalDateTime.now();
     private ProductResponse productResponse;
 }

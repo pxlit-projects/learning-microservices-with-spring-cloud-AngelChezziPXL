@@ -1,8 +1,9 @@
-package be.pxl.services.productcatalog.config;
+package be.pxl.services.logbook.config;
 
-import be.pxl.services.productcatalog.controller.model.ApiError;
-import be.pxl.services.productcatalog.exception.ConflictException;
-import be.pxl.services.productcatalog.exception.ResourceNotFoundException;
+
+import be.pxl.services.logbook.controller.model.ApiError;
+import be.pxl.services.logbook.exception.ConflictException;
+import be.pxl.services.logbook.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.core.JsonParseException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

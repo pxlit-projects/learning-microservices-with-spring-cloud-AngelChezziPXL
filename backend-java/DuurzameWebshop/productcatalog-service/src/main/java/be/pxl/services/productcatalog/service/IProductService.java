@@ -2,6 +2,7 @@ package be.pxl.services.productcatalog.service;
 
 import be.pxl.services.productcatalog.domain.dto.ProductRequest;
 import be.pxl.services.productcatalog.domain.dto.ProductResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 

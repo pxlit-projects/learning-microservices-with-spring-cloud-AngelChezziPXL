@@ -1,15 +1,14 @@
 package be.pxl.services.productcatalog.service;
 
-import be.pxl.services.productcatalog.client.LogbookClient;
 import be.pxl.services.productcatalog.domain.Category;
 import be.pxl.services.productcatalog.domain.Product;
 import be.pxl.services.productcatalog.domain.dto.ProductRequest;
 import be.pxl.services.productcatalog.domain.dto.ProductResponse;
-import be.pxl.services.productcatalog.domain.dto.LogbookRequest;
 import be.pxl.services.productcatalog.exception.ConflictException;
 import be.pxl.services.productcatalog.exception.ResourceNotFoundException;
 import be.pxl.services.productcatalog.repository.CategoryRepository;
 import be.pxl.services.productcatalog.repository.ProductRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +23,8 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final RabbitTemplate rabbitTemplate;
-    private final LogbookClient logbookClient;            //TODO: replace later with correct ms clients
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
+    private final ObjectMapper objectMapper;
 
     @Override
     public List<ProductResponse> findAll() {
@@ -42,7 +41,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void addProduct(ProductRequest productRequest) {
+    public void addProduct(ProductRequest productRequest){
         long userId = productRequest.getUserId();
         if(userId == 0) {
             throw new ConflictException("UserId cannot be null");
@@ -50,12 +49,9 @@ public class ProductService implements IProductService {
 
         log.info("Add product: {}", productRequest);
         Product product = productRepository.save(mapProductRequestToProduct(productRequest));
-
-        log.info("Setting update on the queue");
-        sendUpdateToLogbookViaRabbitMQ(userId, product.toProductResponse());
     }
 
-    public void updateProduct(Long id, ProductRequest productRequest) {
+    public void updateProduct(Long id, ProductRequest productRequest){
         long userId = productRequest.getUserId();
         if(userId == 0) {
             throw new ConflictException("User id cannot be null");
@@ -65,8 +61,6 @@ public class ProductService implements IProductService {
         Product updatedProduct = mapProductRequestToProduct(productRequest);
         updatedProduct.setId(product.getId());
         productRepository.save(updatedProduct);
-        log.info("Setting update on the queue");
-        sendUpdateToLogbookViaRabbitMQ(userId, product.toProductResponse());
 
     }
 
@@ -108,16 +102,5 @@ public class ProductService implements IProductService {
                 .available(product.isAvailable())
                 .price(product.getPrice())
                 .build();
-    }
-
-    private void sendUpdateToLogbookViaRabbitMQ(Long userId, ProductResponse productResponse) {
-        LogbookRequest logbookRequest = LogbookRequest.builder()
-                .sender("productcatalog-service")
-                .senderId(userId)
-                .productResponse(productResponse)
-                .build();
-        rabbitTemplate.convertAndSend("products-queue", logbookRequest);
-
-
     }
 }

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +28,10 @@ public class LogbookService implements ILogbookService {
 
     @Override
     public void addLog(LogbookRequest logbookRequest) {
-        logger.info("LogbookService.addLog() invoked.");
+        logger.info("LogbookService.addLog() method invoked.");
         ProductLog productLog = ProductLog.builder()
-                        .senderId(logbookRequest.getSenderId())
+                        .userId(logbookRequest.getUserId())
+                        .timeStamp(logbookRequest.getTimestamp())
                         .productId(logbookRequest.getProductResponse().getId())
                         .name(logbookRequest.getProductResponse().getName()).description(logbookRequest.getProductResponse().getDescription())
                         .categoryName(logbookRequest.getProductResponse().getCategoryName())
@@ -41,4 +43,6 @@ public class LogbookService implements ILogbookService {
         logger.info("Saving product log to db.");
         productlogRepository.save(productLog);
     }
+
+
 }

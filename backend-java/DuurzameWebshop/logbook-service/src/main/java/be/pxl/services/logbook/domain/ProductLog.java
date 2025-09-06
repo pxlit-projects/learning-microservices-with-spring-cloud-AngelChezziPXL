@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Entity
 @Data
@@ -20,7 +21,8 @@ public class ProductLog {
     @Id
     @GeneratedValue
     private Long id;
-    private Long senderId;
+    private LocalDateTime timeStamp = LocalDateTime.now();
+    private Long userId;
     private Long productId;
     private String name;
     private String description;
@@ -32,7 +34,8 @@ public class ProductLog {
     public ProductLogResponse toProductLogResponse() {
         return ProductLogResponse.builder()
                 .id(id)
-                .senderId(senderId)
+                .timestamp(timeStamp)
+                .userId(userId)
                 .productId(productId)
                 .name(name)
                 .description(description)
@@ -46,7 +49,8 @@ public class ProductLog {
     public ProductLogRequest toProductLogRequest() {
         return ProductLogRequest.builder()
                 .id(id)
-                .senderId(senderId)
+                .timestamp(timeStamp)
+                .userId(userId)
                 .productId(productId)
                 .name(name)
                 .description(description)

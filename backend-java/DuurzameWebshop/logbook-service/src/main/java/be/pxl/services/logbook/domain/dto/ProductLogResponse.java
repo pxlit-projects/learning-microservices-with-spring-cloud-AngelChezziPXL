@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Data
 @NoArgsConstructor
@@ -12,7 +13,8 @@ import java.util.List;
 @Builder
 public class ProductLogResponse {
     private Long id;
-    private Long senderId;
+    private LocalDateTime timestamp;
+    private Long userId;
     private Long productId;
     private String name;
     private String description;

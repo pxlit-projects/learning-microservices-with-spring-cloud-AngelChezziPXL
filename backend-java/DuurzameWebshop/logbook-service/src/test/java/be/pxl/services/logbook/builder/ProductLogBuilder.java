@@ -21,7 +21,7 @@ public class ProductLogBuilder {
         productLog = ProductLog.builder()
                 .id(RANDOM.nextLong(1L, 1000L))
                 .productId(RANDOM.nextLong(1L, 1000L))
-                .senderId(RANDOM.nextLong(1L, 1000L))
+                .userId(RANDOM.nextLong(1L, 1000L))
                 .name(UUID.randomUUID().toString())
                 .description(UUID.randomUUID().toString())
                 .categoryName(UUID.randomUUID().toString())
@@ -47,7 +47,7 @@ public class ProductLogBuilder {
     }
 
     public ProductLogBuilder withSenderId(Long senderId) {
-        productLog.setSenderId(senderId);
+        productLog.setUserId(senderId);
         return this;
     }
 

@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class LogbookRequest {
+public class ProductQueueMessage {
     private long userId;
-    private String serviceName;
-    private LocalDateTime timestamp;
+    private String serviceName = "productcatalog-service";
+    private LocalDateTime timestamp = LocalDateTime.now();
     private ProductResponse productResponse;
 }
