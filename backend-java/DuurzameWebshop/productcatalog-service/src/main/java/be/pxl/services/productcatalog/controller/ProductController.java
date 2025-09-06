@@ -3,6 +3,7 @@ package be.pxl.services.productcatalog.controller;
 import be.pxl.services.productcatalog.domain.dto.ProductRequest;
 import be.pxl.services.productcatalog.domain.dto.ProductResponse;
 import be.pxl.services.productcatalog.service.IProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,13 +32,13 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)             // voor producten te kunnen toevoegen
-    public void createProduct(@Valid @RequestBody ProductRequest productRequest) {
+    public void createProduct(@Valid @RequestBody ProductRequest productRequest) throws JsonProcessingException {
         productService.addProduct(productRequest);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)                      // voor updaten, categoriseren, labelen van producten
-    public void updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
+    public void updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) throws JsonProcessingException {
         productService.updateProduct(id, productRequest);
     }
 

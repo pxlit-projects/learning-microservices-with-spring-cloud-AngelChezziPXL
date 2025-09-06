@@ -10,7 +10,7 @@ public class QueueConfiguration {
 
 
     @Bean
-      public Queue productQueue() {
+      public Queue myQueue() {
         return new Queue(QUEUE_NAME, true);
     }
     

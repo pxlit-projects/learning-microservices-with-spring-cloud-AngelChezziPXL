@@ -6,14 +6,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class QueueService {
     private ObjectMapper mapper = new ObjectMapper();
     private Logger logger = LoggerFactory.getLogger(QueueService.class);
-    private ILogbookService logbookService = new LogbookService();
-    private final String QUEUE_NAME = "product_queue";
+    @Autowired
+    private ILogbookService logbookService;
+    private final String QUEUE_NAME = "product-queue";
 
     @RabbitListener(queues = QUEUE_NAME)
     public void processQueueItem(String jsonString) {

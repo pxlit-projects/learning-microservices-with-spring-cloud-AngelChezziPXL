@@ -14,6 +14,6 @@ import java.time.LocalDateTime;
 public class ProductQueueMessage {
     private long userId;
     private String serviceName = "productcatalog-service";
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private String timestamp = LocalDateTime.now().toString();
     private ProductResponse productResponse;
 }

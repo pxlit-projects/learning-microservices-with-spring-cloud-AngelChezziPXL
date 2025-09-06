@@ -2,19 +2,20 @@ package be.pxl.services.productcatalog.service;
 
 import be.pxl.services.productcatalog.domain.Category;
 import be.pxl.services.productcatalog.domain.Product;
+import be.pxl.services.productcatalog.domain.dto.ProductQueueMessage;
 import be.pxl.services.productcatalog.domain.dto.ProductRequest;
 import be.pxl.services.productcatalog.domain.dto.ProductResponse;
 import be.pxl.services.productcatalog.exception.ConflictException;
 import be.pxl.services.productcatalog.exception.ResourceNotFoundException;
 import be.pxl.services.productcatalog.repository.CategoryRepository;
 import be.pxl.services.productcatalog.repository.ProductRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,9 +23,8 @@ import java.util.List;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final RabbitTemplate rabbitTemplate;
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
-    private final ObjectMapper objectMapper;
+    private final IRabbitMqService rabbitMqService = new RabbitMqService();
 
     @Override
     public List<ProductResponse> findAll() {
@@ -41,17 +41,17 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void addProduct(ProductRequest productRequest){
+    public void addProduct(ProductRequest productRequest) throws JsonProcessingException {
         long userId = productRequest.getUserId();
         if(userId == 0) {
             throw new ConflictException("UserId cannot be null");
         }
-
-        log.info("Add product: {}", productRequest);
+        log.info("Adding product: {}", productRequest);
         Product product = productRepository.save(mapProductRequestToProduct(productRequest));
+        publishOnRabbitMqQueue(userId, product);
     }
 
-    public void updateProduct(Long id, ProductRequest productRequest){
+    public void updateProduct(Long id, ProductRequest productRequest) throws JsonProcessingException {
         long userId = productRequest.getUserId();
         if(userId == 0) {
             throw new ConflictException("User id cannot be null");
@@ -60,7 +60,8 @@ public class ProductService implements IProductService {
         Product product = productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("Product with id %s not found", id)));
         Product updatedProduct = mapProductRequestToProduct(productRequest);
         updatedProduct.setId(product.getId());
-        productRepository.save(updatedProduct);
+        Product dbProduct = productRepository.save(updatedProduct);
+        publishOnRabbitMqQueue(userId, dbProduct);
 
     }
 
@@ -102,5 +103,13 @@ public class ProductService implements IProductService {
                 .available(product.isAvailable())
                 .price(product.getPrice())
                 .build();
+    }
+
+    private void publishOnRabbitMqQueue(Long userId, Product product) throws JsonProcessingException {
+        ProductQueueMessage productQueueMessage = new ProductQueueMessage();
+        productQueueMessage.setUserId(userId);
+        productQueueMessage.setServiceName("productcatalog_service");
+        productQueueMessage.setProductResponse(product.toProductResponse());
+        rabbitMqService.sendMessageToQueue(productQueueMessage);
     }
 }

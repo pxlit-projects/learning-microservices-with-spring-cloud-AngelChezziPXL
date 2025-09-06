@@ -9,7 +9,7 @@ import java.util.List;
 public interface IProductService {
     List<ProductResponse> findAll();
     ProductResponse findById(Long id);
-    void addProduct(ProductRequest productRequest);
-    void updateProduct(Long id, ProductRequest productRequest);
+    void addProduct(ProductRequest productRequest) throws JsonProcessingException;
+    void updateProduct(Long id, ProductRequest productRequest) throws JsonProcessingException;
     void deleteProduct(Long id);
 }
