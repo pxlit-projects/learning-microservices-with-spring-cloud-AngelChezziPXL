@@ -29,6 +29,7 @@ public class ProductResponse {
                 .description(product.getDescription())
                 .categoryName(product.getCategory().getName())
                 .tags(product.getTags())
+                .available(product.isAvailable())
                 .price(product.getPrice())
                 .build();
     }
