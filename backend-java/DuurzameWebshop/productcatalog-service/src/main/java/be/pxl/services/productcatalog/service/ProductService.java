@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,7 +23,7 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private static final Logger log = LoggerFactory.getLogger(ProductService.class);
-    private final IRabbitMqService rabbitMqService = new RabbitMqService();
+    private final IRabbitMqService rabbitMqService;
 
     @Override
     public List<ProductResponse> findAll() {
