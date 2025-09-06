@@ -11,7 +11,7 @@ public class ProductMockBuilder {
 
     public ProductMockBuilder(){
         this.product = Product.builder()
-                .Id(random.nextLong(1L, 1000L ))
+                .id(random.nextLong(1L, 1000L ))
                 .name(UUID.randomUUID().toString())
                 .price(random.nextDouble(1.0,1000.0))
                 .description(UUID.randomUUID().toString())
