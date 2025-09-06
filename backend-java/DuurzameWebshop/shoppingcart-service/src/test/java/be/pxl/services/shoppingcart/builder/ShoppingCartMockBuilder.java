@@ -1,4 +1,4 @@
-package be.pxl.services.shoppingcart.service.builder;
+package be.pxl.services.shoppingcart.builder;
 
 import be.pxl.services.shoppingcart.domain.Item;
 import be.pxl.services.shoppingcart.domain.ShoppingCart;
