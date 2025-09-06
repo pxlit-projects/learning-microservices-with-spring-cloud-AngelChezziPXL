@@ -1,4 +1,4 @@
-package be.pxl.services.shoppingcart.controller.dto;
+package be.pxl.services.shoppingcart.domain.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;

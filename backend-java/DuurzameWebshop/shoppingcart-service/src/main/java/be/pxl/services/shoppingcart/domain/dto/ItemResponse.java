@@ -1,4 +1,4 @@
-package be.pxl.services.shoppingcart.controller.dto;
+package be.pxl.services.shoppingcart.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,15 +9,17 @@ import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class ProductResponse {
+@NoArgsConstructor
+public class ItemResponse {
     private Long id;
+    private Long productId;
     private String name;
     private String description;
     private String categoryName;
     private Boolean available;
     private List<String> tags;
     private double price;
+    private int quantity;
 
 }

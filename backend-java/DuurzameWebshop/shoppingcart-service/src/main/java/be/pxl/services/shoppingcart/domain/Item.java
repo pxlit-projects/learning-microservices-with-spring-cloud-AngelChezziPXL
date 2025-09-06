@@ -1,5 +1,6 @@
 package be.pxl.services.shoppingcart.domain;
 
+import be.pxl.services.shoppingcart.domain.dto.ItemResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,6 +47,21 @@ public class Item {
         carts.remove(shoppingCart);
         shoppingCart.removeShoppingCartItem(this);
     }
+
+    public ItemResponse toItemResponse() {
+        return ItemResponse.builder()
+                .id(id)
+                .productId(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .categoryName(product.getName())
+                .available(product.getAvailable())
+                .tags(product.getTags())
+                .price(product.getPrice())
+                .quantity(quantity)
+                .build();
+    }
+
 
     @Override
     public boolean equals(Object o) {

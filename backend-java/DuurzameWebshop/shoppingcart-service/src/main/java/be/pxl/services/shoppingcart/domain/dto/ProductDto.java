@@ -1,4 +1,4 @@
-package be.pxl.services.shoppingcart.service.dto;
+package be.pxl.services.shoppingcart.domain.dto;
 
 import be.pxl.services.shoppingcart.domain.Product;
 import lombok.*;
