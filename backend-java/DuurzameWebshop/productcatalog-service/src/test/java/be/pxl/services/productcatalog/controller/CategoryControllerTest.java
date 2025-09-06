@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = CategoryController.class)
 public class CategoryControllerTest {
@@ -48,7 +47,8 @@ public class CategoryControllerTest {
         Mockito.when(categoryServiceMock.findAll()).thenReturn(categoryRecords);
 
         //ACT & ASSERT
-        var respopnse = mockMvc.perform(get(CATEGORY_URL))
+        var respopnse = mockMvc.perform(get(CATEGORY_URL)
+                        .header("ROLE","ADMIN"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(5));
 
@@ -66,7 +66,8 @@ public class CategoryControllerTest {
         Mockito.when(categoryServiceMock.findCategoryById(Mockito.anyLong())).thenReturn(categoryRecord);
 
         //ACT & ASSERT
-        var response = mockMvc.perform(get(requestURL))
+        var response = mockMvc.perform(get(requestURL)
+                        .header("ROLE","ADMIN"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(name));
 
@@ -83,7 +84,8 @@ public class CategoryControllerTest {
         Mockito.when(categoryServiceMock.findCategoryById(Mockito.anyLong())).thenThrow(new ResourceNotFoundException("Id " + invalidId + " not found"));
 
         //ACT & ASSERT
-        var response = mockMvc.perform(get(requestURL))
+        var response = mockMvc.perform(get(requestURL)
+                        .header("ROLE","ADMIN"))
                 .andExpect(status().isNotFound());
 
         Mockito.verify(categoryServiceMock, Mockito.times(1)).findCategoryById(Mockito.anyLong());
@@ -99,6 +101,7 @@ public class CategoryControllerTest {
 
         //ACT & ASSERT
         var response = mockMvc.perform(post(CATEGORY_URL)
+                        .header("ROLE","ADMIN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isCreated());
@@ -113,6 +116,7 @@ public class CategoryControllerTest {
 
         //ACT & ASSERT
         var response = mockMvc.perform(post(CATEGORY_URL)
+                        .header("ROLE","ADMIN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isBadRequest());
@@ -133,6 +137,7 @@ public class CategoryControllerTest {
 
         //ACT & ASSERT
         var response = mockMvc.perform(put(requestURL)
+                        .header("ROLE","ADMIN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isAccepted());
@@ -153,6 +158,7 @@ public class CategoryControllerTest {
 
         //ACT & ASSERT
         var response = mockMvc.perform(put(requestURL)
+                        .header("ROLE","ADMIN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isNotFound());
@@ -173,6 +179,7 @@ public class CategoryControllerTest {
 
         //ACT & ASSERT
         var response = mockMvc.perform(put(requestURL)
+                        .header("ROLE","ADMIN")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isConflict());
@@ -189,8 +196,9 @@ public class CategoryControllerTest {
         Mockito.doNothing().when(categoryServiceMock).deleteCategoryById(validId);
 
         //ACT & ASSERT
-        var response = mockMvc.perform(delete(requestURL))
-                .andExpect(status().isNoContent());
+        var response = mockMvc.perform(delete(requestURL)
+                        .header("ROLE","ADMIN"))
+                        .andExpect(status().isNoContent());
 
         Mockito.verify(categoryServiceMock, Mockito.times(1)).deleteCategoryById(validId);
     }
@@ -204,7 +212,8 @@ public class CategoryControllerTest {
         Mockito.doThrow(new ResourceNotFoundException("Category with id " + invalidId + " not found.")).when(categoryServiceMock).deleteCategoryById(invalidId);
 
         //ACT & ASSERT
-        var response = mockMvc.perform(delete(requestURL))
+        var response = mockMvc.perform(delete(requestURL)
+                        .header("ROLE","ADMIN"))
                 .andExpect(status().isNotFound());
 
         Mockito.verify(categoryServiceMock, Mockito.times(1)).deleteCategoryById(invalidId);
