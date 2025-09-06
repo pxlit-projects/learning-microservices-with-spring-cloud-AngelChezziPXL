@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessagingController {
 
     private final RabbitTemplate rabbitTemplate;
+    private final String PRODUCT_EXCHANGE = "product-queue";
+    private final String PRODUCT_ROUTE_KEY = "product.queue";
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public void sendMessage(){
-        rabbitTemplate.convertAndSend("myQueue", "Hello, world!");
+        rabbitTemplate.convertAndSend(PRODUCT_EXCHANGE, PRODUCT_ROUTE_KEY, "Hello, world!");
     }
 }
