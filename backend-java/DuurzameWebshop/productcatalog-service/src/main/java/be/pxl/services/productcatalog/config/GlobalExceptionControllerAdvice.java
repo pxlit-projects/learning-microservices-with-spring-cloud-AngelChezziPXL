@@ -1,6 +1,8 @@
 package be.pxl.services.productcatalog.config;
 
+
 import be.pxl.services.productcatalog.controller.model.ApiError;
+import be.pxl.services.productcatalog.exception.AuthorizationException;
 import be.pxl.services.productcatalog.exception.ConflictException;
 import be.pxl.services.productcatalog.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -26,6 +28,13 @@ public class GlobalExceptionControllerAdvice {
     @ExceptionHandler({ConflictException.class})
     public ResponseEntity<Object> handleConflictException(ConflictException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
+        ApiError error = new ApiError(status, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler({AuthorizationException.class})
+    public ResponseEntity<Object> handleAuthorizationException(AuthorizationException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         ApiError error = new ApiError(status, ex.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(error);
     }
