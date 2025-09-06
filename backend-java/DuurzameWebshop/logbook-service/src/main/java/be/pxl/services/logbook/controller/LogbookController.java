@@ -32,7 +32,7 @@ public class LogbookController {
     }
 
     // RETRIEVE ALL LOGBOOK ENTRIES FOR SPECIFIC PRODUCTID
-    @GetMapping
+    @GetMapping(params = "product_id")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductLogResponse> getAllById(@RequestHeader Map<String, String> headers, @RequestParam long productid) {
         checkAuthorization(headers);

@@ -2,6 +2,7 @@ package be.pxl.services.logbook.domain;
 
 import be.pxl.services.logbook.domain.dto.ProductLogRequest;
 import be.pxl.services.logbook.domain.dto.ProductLogResponse;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -21,7 +22,9 @@ public class ProductLog {
     @Id
     @GeneratedValue
     private Long id;
-    private LocalDateTime timeStamp = LocalDateTime.now();
+    @Column(updatable = false, insertable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime timeStamp;
     private Long userId;
     private Long productId;
     private String name;

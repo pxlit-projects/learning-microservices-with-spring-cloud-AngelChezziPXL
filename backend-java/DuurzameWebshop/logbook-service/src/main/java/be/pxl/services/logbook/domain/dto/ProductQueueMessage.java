@@ -12,18 +12,18 @@ import lombok.NoArgsConstructor;
 public class ProductQueueMessage {
     private long userId;
     private String serviceName = "productcatalog-service";
-    private ProductDto productDto;
+    private ProductResponse productResponse;
 
     public ProductLogRequest toProductLogRequest() {            //No ID and timestamp because the entity will do it
         return ProductLogRequest.builder()
                 .userId(userId)
-                .productId(productDto.getId())
-                .name(productDto.getName())
-                .description(productDto.getDescription())
-                .categoryName(productDto.getCategoryName())
-                .available(productDto.getAvailable())
-                .tags(productDto.getTags())
-                .price(productDto.getPrice())
+                .productId(productResponse.getId())
+                .name(productResponse.getName())
+                .description(productResponse.getDescription())
+                .categoryName(productResponse.getCategoryName())
+                .available(productResponse.getAvailable())
+                .tags(productResponse.getTags())
+                .price(productResponse.getPrice())
                 .build();
     }
 }

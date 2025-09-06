@@ -2,6 +2,7 @@ package be.pxl.services.logbook.service;
 
 import be.pxl.services.logbook.domain.dto.ProductLogRequest;
 import be.pxl.services.logbook.domain.dto.ProductQueueMessage;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,9 +21,11 @@ public class QueueService {
     private final String QUEUE_NAME = "product-queue";
 
     @RabbitListener(queues = QUEUE_NAME)
-    public void processQueueItem(String jsonString) {
+    public void processQueueItem(String jsonString) throws JsonProcessingException {
         logger.info("Logbook-service received new message. \n ProductQueueMessageDetails: {}.", jsonString);
-        ProductQueueMessage productQueueMessage = mapper.convertValue(jsonString, ProductQueueMessage.class);
+
+        ProductQueueMessage productQueueMessage = mapper.readValue(jsonString, ProductQueueMessage.class);
+        logger.debug(productQueueMessage.toString());
         logbookService.addProductLog(productQueueMessage.toProductLogRequest());
     }
 }
