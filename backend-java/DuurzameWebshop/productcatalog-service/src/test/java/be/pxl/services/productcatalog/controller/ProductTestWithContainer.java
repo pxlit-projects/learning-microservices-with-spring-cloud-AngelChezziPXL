@@ -3,7 +3,7 @@
 //import be.pxl.services.productcatalog.builders.ProductBuilder;
 //import be.pxl.services.productcatalog.domain.dto.CategoryRequest;
 //import be.pxl.services.productcatalog.domain.dto.ProductRequest;
-//import be.pxl.services.productcatalog.repository.ProductRepository;
+//import be.pxl.services.productcatalog.repository.IProductRepository;
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@
 //    @Autowired
 //    MockMvc mockMvc;
 //    @Autowired
-//    ProductRepository productRepository;
+//    IProductRepository productRepository;
 //
 //    @Container
 //    private static MySQLContainer mySQLContainer = new MySQLContainer("mysql:5.7.37");

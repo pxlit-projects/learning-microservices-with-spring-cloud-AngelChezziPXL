@@ -2,8 +2,8 @@ package be.pxl.services.productcatalog;
 
 import be.pxl.services.productcatalog.domain.Category;
 import be.pxl.services.productcatalog.domain.Product;
-import be.pxl.services.productcatalog.repository.CategoryRepository;
-import be.pxl.services.productcatalog.repository.ProductRepository;
+import be.pxl.services.productcatalog.repository.ICategoryRepository;
+import be.pxl.services.productcatalog.repository.IProductRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -19,15 +19,15 @@ import java.util.*;
 @Profile("dev")
 @RequiredArgsConstructor
 public class DevDataSeeder implements CommandLineRunner {
-    private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
+    private final IProductRepository IProductRepository;
+    private final ICategoryRepository ICategoryRepository;
     private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     public void run(String... args) throws Exception {
         // seed only when db is empty
-        if(categoryRepository.count() > 0 || productRepository.count() > 0) return;
+        if(ICategoryRepository.count() > 0 || IProductRepository.count() > 0) return;
         JsonNode root = objectMapper.readTree(new ClassPathResource("seed-data.json").getInputStream());
 
         // 1) Create/save categories first
@@ -42,7 +42,7 @@ public class DevDataSeeder implements CommandLineRunner {
                 }
             }
         }
-        categoryRepository.saveAll(byName.values());
+        ICategoryRepository.saveAll(byName.values());
 
 
         // 2) Create products and link to category by name
@@ -58,7 +58,7 @@ public class DevDataSeeder implements CommandLineRunner {
                     String categoryName = p.get("categoryName").asText();
                     Category cat = byName.computeIfAbsent(
                             categoryName,
-                            n -> categoryRepository.findByName(n).orElseThrow()
+                            n -> ICategoryRepository.findByName(n).orElseThrow()
                     );
                     prod.setCategory(cat);
 
@@ -66,7 +66,7 @@ public class DevDataSeeder implements CommandLineRunner {
                     p.get("tags").forEach(t -> tags.add(t.asText()));
                     prod.setTags(tags);
 
-                    productRepository.save(prod);
+                    IProductRepository.save(prod);
                 }
             }
         }

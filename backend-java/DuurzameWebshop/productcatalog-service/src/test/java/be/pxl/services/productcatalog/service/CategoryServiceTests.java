@@ -6,7 +6,7 @@ import be.pxl.services.productcatalog.domain.dto.CategoryRequest;
 import be.pxl.services.productcatalog.domain.Category;
 import be.pxl.services.productcatalog.exception.ConflictException;
 import be.pxl.services.productcatalog.exception.ResourceNotFoundException;
-import be.pxl.services.productcatalog.repository.CategoryRepository;
+import be.pxl.services.productcatalog.repository.ICategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,11 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.eq;
+
 @ExtendWith(MockitoExtension.class)
 public class CategoryServiceTests {
     @Mock
-    private CategoryRepository categoryRepositoryMock;
+    private ICategoryRepository ICategoryRepositoryMock;
     private CategoryBuilder categoryBuilder = new CategoryBuilder();
+    private final long USER_ID = 1;
 
     @InjectMocks
     private CategoryService categoryService;
@@ -32,12 +35,12 @@ public class CategoryServiceTests {
     public void findAll_ShouldReturnAllCategories() throws Exception {
         //ARRANGE
         List<Category> categories = getRandomCategoryList(5);
-        Mockito.when(categoryRepositoryMock.findAll()).thenReturn(categories);
+        Mockito.when(ICategoryRepositoryMock.findAll()).thenReturn(categories);
         //ACT
         var result = categoryService.findAll();
 
         //ASSERT
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findAll();
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findAll();
         Assertions.assertEquals(categories.size(), result.size());
         Assertions.assertInstanceOf(CategoryRecord.class,result.getFirst());
     }
@@ -47,13 +50,13 @@ public class CategoryServiceTests {
         //ARRANGE
         Long validId = 1L;
         Category category = categoryBuilder.withId(validId).build();
-        Mockito.when(categoryRepositoryMock.findById(validId)).thenReturn(Optional.of(category));
+        Mockito.when(ICategoryRepositoryMock.findById(validId)).thenReturn(Optional.of(category));
 
         //ACT
         var result = categoryService.findCategoryById(validId);
 
         //ASSERT
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findById(validId);
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findById(validId);
         Assertions.assertNotNull(result);
         Assertions.assertInstanceOf(CategoryRecord.class,result);
         Assertions.assertEquals(category.getName(), result.name());
@@ -64,11 +67,11 @@ public class CategoryServiceTests {
         //ARRANGE
         Long invalidId = 1L;
         Category category = categoryBuilder.withId(invalidId).build();
-        Mockito.when(categoryRepositoryMock.findById(invalidId)).thenThrow(new ResourceNotFoundException(String.format("Category with id %d not found", invalidId)));
+        Mockito.when(ICategoryRepositoryMock.findById(invalidId)).thenThrow(new ResourceNotFoundException(String.format("Category with id %d not found", invalidId)));
 
         //ACT & ASSERT
         ResourceNotFoundException ex = Assertions.assertThrows(ResourceNotFoundException.class,() -> categoryService.findCategoryById(invalidId));
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findById(invalidId);
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findById(invalidId);
         Assertions.assertTrue(ex.getMessage().contains(String.format("%d not found", invalidId)));
     }
 
@@ -78,14 +81,14 @@ public class CategoryServiceTests {
         String validName = "valid category";
         Category category = categoryBuilder.withName(validName).build();
         CategoryRecord expectedResult = new CategoryRecord(category.getId(), category.getName());
-        Mockito.when(categoryRepositoryMock.findByName(validName)).thenReturn(Optional.of(category));
+        Mockito.when(ICategoryRepositoryMock.findByName(validName)).thenReturn(Optional.of(category));
 
         //ACT
         var result = categoryService.findCategoryByName(validName);
 
         // ASSERT
         Assertions.assertNotNull(result);
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findByName(Mockito.anyString());
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findByName(Mockito.anyString());
         Assertions.assertEquals(category.getName(), result.name());
         Assertions.assertInstanceOf(CategoryRecord.class,result);
     }
@@ -95,11 +98,11 @@ public class CategoryServiceTests {
         //ARRANGE
         String invalidName = "invalid category";
         Category category = categoryBuilder.withName(invalidName).build();
-        Mockito.when(categoryRepositoryMock.findByName(invalidName)).thenThrow(new ResourceNotFoundException(String.format("Category with name %s not found", invalidName)));
+        Mockito.when(ICategoryRepositoryMock.findByName(invalidName)).thenThrow(new ResourceNotFoundException(String.format("Category with name %s not found", invalidName)));
 
         //ACT & ASSERT
         ResourceNotFoundException ex = Assertions.assertThrows(ResourceNotFoundException.class,() -> categoryService.findCategoryByName(invalidName));
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findByName(invalidName);
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findByName(invalidName);
         Assertions.assertTrue(ex.getMessage().contains(String.format("%s not found", invalidName)));
     }
 
@@ -115,15 +118,15 @@ public class CategoryServiceTests {
         CategoryRequest validInput = new CategoryRequest();
         validInput.setCategoryName(category.getName());
 
-        Mockito.when(categoryRepositoryMock.save(Mockito.any(Category.class))).thenReturn(returnCategory);
-        Mockito.when(categoryRepositoryMock.findByName(Mockito.anyString())).thenReturn(Optional.empty());
+        Mockito.when(ICategoryRepositoryMock.save(Mockito.any(Category.class))).thenReturn(returnCategory);
+        Mockito.when(ICategoryRepositoryMock.findByName(Mockito.anyString())).thenReturn(Optional.empty());
 
         //ACT
-        categoryService.addCategory(validInput);
+        categoryService.addCategory(USER_ID, validInput);
 
         //ASSERT
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findByName(validInput.getCategoryName());
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).save(Mockito.any(Category.class));
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findByName(eq(validInput.getCategoryName()));
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).save(Mockito.any(Category.class));
     }
 
     @Test
@@ -133,14 +136,14 @@ public class CategoryServiceTests {
         Category category = categoryBuilder.withName(invalidName).build();
         CategoryRequest categoryRequest = new CategoryRequest();
         categoryRequest.setCategoryName(category.getName());
-        Mockito.when(categoryRepositoryMock.findByName(invalidName)).thenReturn(Optional.of(category));
+        Mockito.when(ICategoryRepositoryMock.findByName(invalidName)).thenReturn(Optional.of(category));
 
         //ACT & ASSERT
-        ConflictException ex = Assertions.assertThrows(ConflictException.class,() -> categoryService.addCategory(categoryRequest));
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findByName(invalidName);
+        ConflictException ex = Assertions.assertThrows(ConflictException.class,() -> categoryService.addCategory(USER_ID, categoryRequest));
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findByName(eq(invalidName));
         Assertions.assertTrue(ex.getMessage().contains(invalidName), "The error message must contain the category name.");
         Assertions.assertTrue(ex.getMessage().contains("already exists"),"The error message must contain the words :'alreay exists");
-        Mockito.verify(categoryRepositoryMock, Mockito.never()).save(Mockito.any(Category.class));
+        Mockito.verify(ICategoryRepositoryMock, Mockito.never()).save(Mockito.any(Category.class));
     }
 
     @Test
@@ -150,17 +153,17 @@ public class CategoryServiceTests {
         String validName = "valid category";
         Category category = categoryBuilder.withId(validId).build();
 
-        Mockito.when(categoryRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(category));
-        Mockito.when(categoryRepositoryMock.findByName(validName)).thenReturn(Optional.empty());
-        Mockito.when(categoryRepositoryMock.save(Mockito.any(Category.class))).thenReturn(category);
+        Mockito.when(ICategoryRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(category));
+        Mockito.when(ICategoryRepositoryMock.findByName(validName)).thenReturn(Optional.empty());
+        Mockito.when(ICategoryRepositoryMock.save(Mockito.any(Category.class))).thenReturn(category);
 
         //ACT
-        categoryService.updateCategoryName(validId, validName);
+        categoryService.updateCategoryName(USER_ID, validId, validName);
 
         //ASSERT
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findById(validId);
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findByName(Mockito.anyString());
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).save(Mockito.any(Category.class));
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findById(eq(validId));
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findByName(Mockito.anyString());
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).save(Mockito.any(Category.class));
     }
 
     @Test
@@ -168,13 +171,13 @@ public class CategoryServiceTests {
         //ARRANGE
         Long invalidId = 1L;
         Category category = categoryBuilder.withId(invalidId).build();
-        Mockito.when(categoryRepositoryMock.findById(invalidId)).thenThrow(new ResourceNotFoundException(String.format("Category with id %d not found", invalidId)));
+        Mockito.when(ICategoryRepositoryMock.findById(invalidId)).thenThrow(new ResourceNotFoundException(String.format("Category with id %d not found", invalidId)));
 
         //ACT & ASSERT
-        ResourceNotFoundException ex = Assertions.assertThrows(ResourceNotFoundException.class,() -> categoryService.updateCategoryName(invalidId, Mockito.anyString()));
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findById(invalidId);
+        ResourceNotFoundException ex = Assertions.assertThrows(ResourceNotFoundException.class,() -> categoryService.updateCategoryName(USER_ID, eq(invalidId), Mockito.anyString()));
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findById(invalidId);
         Assertions.assertTrue(ex.getMessage().contains(String.format("%d not found", invalidId)));
-        Mockito.verify(categoryRepositoryMock, Mockito.never()).save(Mockito.any(Category.class));
+        Mockito.verify(ICategoryRepositoryMock, Mockito.never()).save(Mockito.any(Category.class));
     }
 
     @Test
@@ -184,15 +187,15 @@ public class CategoryServiceTests {
         String invalidName = "invalid category name";
         Category category = categoryBuilder.withId(validId).build();
 
-        Mockito.when(categoryRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(category));
-        Mockito.when(categoryRepositoryMock.findByName(invalidName)).thenReturn(Optional.of(categoryBuilder.withId(validId).withName(invalidName).build()));
+        Mockito.when(ICategoryRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(category));
+        Mockito.when(ICategoryRepositoryMock.findByName(invalidName)).thenReturn(Optional.of(categoryBuilder.withId(validId).withName(invalidName).build()));
 
         //ACT & ASSERT
-        ConflictException ex = Assertions.assertThrows(ConflictException.class,() -> categoryService.updateCategoryName(validId, invalidName));
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findByName(invalidName);
+        ConflictException ex = Assertions.assertThrows(ConflictException.class,() -> categoryService.updateCategoryName(USER_ID, validId, invalidName));
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findByName(Mockito.anyString());
         Assertions.assertTrue(ex.getMessage().contains(invalidName), "The error message must contain the category name.");
         Assertions.assertTrue(ex.getMessage().contains("already exists"), "The error message must contain the words 'already exists'");
-        Mockito.verify(categoryRepositoryMock, Mockito.never()).save(Mockito.any(Category.class));
+        Mockito.verify(ICategoryRepositoryMock, Mockito.never()).save(Mockito.any(Category.class));
     }
 
     @Test
@@ -200,14 +203,14 @@ public class CategoryServiceTests {
         //ARRANGE
         Long invalidId = 1L;
 
-        Mockito.when(categoryRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+        Mockito.when(ICategoryRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         //ACT & ASSERT
-        ResourceNotFoundException ex = Assertions.assertThrows(ResourceNotFoundException.class,() -> categoryService.deleteCategoryById(invalidId));
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findById(invalidId);
+        ResourceNotFoundException ex = Assertions.assertThrows(ResourceNotFoundException.class,() -> categoryService.deleteCategoryById(USER_ID, invalidId));
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findById(invalidId);
         Assertions.assertTrue(ex.getMessage().contains(invalidId.toString()));
         Assertions.assertTrue(ex.getMessage().contains("not found"));
-        Mockito.verify(categoryRepositoryMock, Mockito.never()).deleteById(Mockito.anyLong());
+        Mockito.verify(ICategoryRepositoryMock, Mockito.never()).deleteById(Mockito.anyLong());
     }
 
     @Test
@@ -216,25 +219,15 @@ public class CategoryServiceTests {
         Long validId = 1L;
         Category category = categoryBuilder.withId(validId).build();
 
-        Mockito.when(categoryRepositoryMock.findById(validId)).thenReturn(Optional.of(category));
-        Mockito.doNothing().when(categoryRepositoryMock).deleteById(Mockito.anyLong());
+        Mockito.when(ICategoryRepositoryMock.findById(validId)).thenReturn(Optional.of(category));
+        Mockito.doNothing().when(ICategoryRepositoryMock).deleteById(Mockito.anyLong());
 
         //ACT
-        categoryService.deleteCategoryById(validId);
+        categoryService.deleteCategoryById(USER_ID, validId);
 
         //ASSERT
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).findById(validId);
-        Mockito.verify(categoryRepositoryMock, Mockito.times(1)).deleteById(validId);
-    }
-
-
-    //@Test
-    public void testName() throws Exception {
-        //ARRANGE
-
-        //ACT
-
-        //ASSERT
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).findById(validId);
+        Mockito.verify(ICategoryRepositoryMock, Mockito.times(1)).deleteById(validId);
     }
 
 

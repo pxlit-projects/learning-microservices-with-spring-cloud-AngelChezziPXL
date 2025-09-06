@@ -5,79 +5,78 @@ import be.pxl.services.productcatalog.domain.Product;
 import be.pxl.services.productcatalog.domain.dto.ProductQueueMessage;
 import be.pxl.services.productcatalog.domain.dto.ProductRequest;
 import be.pxl.services.productcatalog.domain.dto.ProductResponse;
-import be.pxl.services.productcatalog.exception.ConflictException;
 import be.pxl.services.productcatalog.exception.ResourceNotFoundException;
-import be.pxl.services.productcatalog.repository.CategoryRepository;
-import be.pxl.services.productcatalog.repository.ProductRepository;
+import be.pxl.services.productcatalog.repository.ICategoryRepository;
+import be.pxl.services.productcatalog.repository.IProductRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
-    private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
-    private static final Logger log = LoggerFactory.getLogger(ProductService.class);
+    private final IProductRepository IProductRepository;
+    private final ICategoryRepository ICategoryRepository;
+    private static final Logger LOG = LoggerFactory.getLogger(ProductService.class);
     private final IRabbitMqService rabbitMqService;
 
     @Override
     public List<ProductResponse> findAll() {
-        return mapProductListToProductResponseList(productRepository.findAll());
+        LOG.info("Find all products");
+        List<Product> products = IProductRepository.findAll();
+        return products.stream().map(Product::toProductResponse).toList();
     }
 
     @Override
     public ProductResponse findById(Long id) {
-        log.info("Find product by id: {}", id);
-        Product product = productRepository
+        LOG.info("Find product by id: {}", id);
+        Product product = IProductRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Product with id %s not found", id)));
-        return this.mapProductToProductResponse(product);
+        return product.toProductResponse();
     }
 
     @Override
-    public void addProduct(ProductRequest productRequest) throws JsonProcessingException {
-        long userId = productRequest.getUserId();
-        if(userId == 0) {
-            throw new ConflictException("UserId cannot be null");
-        }
-        log.info("Adding product: {}", productRequest);
-        Product product = productRepository.save(mapProductRequestToProduct(productRequest));
-        publishOnRabbitMqQueue(userId, product);
+    public ProductResponse addProduct(long userId, ProductRequest productRequest) throws JsonProcessingException {
+        LOG.info("Adding product: {}", productRequest);
+        Product product = IProductRepository.save(mapProductRequestToProduct(productRequest));
+        ProductResponse productResponse = product.toProductResponse();
+        publishOnRabbitMqQueue(userId, productResponse);
+        return productResponse;
     }
 
-    public void updateProduct(Long id, ProductRequest productRequest) throws JsonProcessingException {
-        long userId = productRequest.getUserId();
-        if(userId == 0) {
-            throw new ConflictException("User id cannot be null");
-        }
-        log.info("Update product: {}", productRequest);
-        Product product = productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("Product with id %s not found", id)));
+    public ProductResponse updateProduct(long userId, long id, ProductRequest productRequest) throws JsonProcessingException {
+        LOG.info("Update product: {}", productRequest);
+        Product product = IProductRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format("Product with id %s not found", id)));
         Product updatedProduct = mapProductRequestToProduct(productRequest);
         updatedProduct.setId(product.getId());
-        Product dbProduct = productRepository.save(updatedProduct);
-        publishOnRabbitMqQueue(userId, dbProduct);
-
+        ProductResponse productResponse = IProductRepository.save(updatedProduct).toProductResponse();
+        publishOnRabbitMqQueue(userId, productResponse);
+        return productResponse;
     }
 
     @Override
-    public void deleteProduct(Long id) {
-        log.info("Delete product with id: {}", id);
-        if(!productRepository.existsById(id)) {
+    public void deleteProduct(long userId, long id) throws JsonProcessingException {
+        LOG.info("Delete product with id: {}", id);
+        if(!IProductRepository.existsById(id)) {
             throw new ResourceNotFoundException(String.format("Product with id %s not found", id));
         }
-        productRepository.deleteById(id
-        );
+        IProductRepository.deleteById(id);
+        ProductResponse emptyProductResponse = new ProductResponse();
+        emptyProductResponse.setId(id);
+        publishOnRabbitMqQueue(userId, emptyProductResponse);
     }
 
     // helper methods (CUSTOM MAPPER)
     private Product mapProductRequestToProduct(ProductRequest productRequest) {
         String categoryName = productRequest.getCategoryName().trim().toLowerCase();
-        Category category = categoryRepository.findByName(categoryName).orElseThrow(() -> new ResourceNotFoundException(String.format("Category %s does not exist in the database", categoryName)));
+        Category category = ICategoryRepository.findByName(categoryName).orElseThrow(() -> new ResourceNotFoundException(String.format("Category %s does not exist in the database", categoryName)));
         return Product.builder()
                 .name(productRequest.getName())
                 .description(productRequest.getDescription())
@@ -88,27 +87,16 @@ public class ProductService implements IProductService {
                 .build();
     }
 
-    private List<ProductResponse> mapProductListToProductResponseList(List<Product> productList) {
-        return productList.stream().map(this::mapProductToProductResponse).toList();
-    }
-
-    private ProductResponse mapProductToProductResponse(Product product){
-        return ProductResponse.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .description(product.getDescription())
-                .categoryName(product.getCategory().getName())
-                .tags(product.getTags())
-                .available(product.isAvailable())
-                .price(product.getPrice())
-                .build();
-    }
-
-    private void publishOnRabbitMqQueue(Long userId, Product product) throws JsonProcessingException {
+    protected void publishOnRabbitMqQueue(Long userId, ProductResponse productResponse) throws JsonProcessingException {
+        LOG.info("Publishing on rabbit mq queue: {}", productResponse);
         ProductQueueMessage productQueueMessage = new ProductQueueMessage();
         productQueueMessage.setUserId(userId);
         productQueueMessage.setServiceName("productcatalog_service");
-        productQueueMessage.setProductResponse(product.toProductResponse());
+        productQueueMessage.setProductResponse(productResponse);
         rabbitMqService.sendMessageToQueue(productQueueMessage);
     }
+
+
+
+
 }

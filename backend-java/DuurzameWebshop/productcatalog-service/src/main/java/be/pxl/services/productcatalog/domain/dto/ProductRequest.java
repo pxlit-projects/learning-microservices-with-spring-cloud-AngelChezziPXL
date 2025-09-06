@@ -14,8 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductRequest {
-    private long userId;
-    //private Long id;
     @NotNull(message= "Product name cannot be empty.")
     private String name;
     @NotNull(message= "Product description cannot be empty.")

@@ -1,5 +1,6 @@
 package be.pxl.services.productcatalog.domain;
 
+import be.pxl.services.productcatalog.domain.dto.ProductRequest;
 import be.pxl.services.productcatalog.domain.dto.ProductResponse;
 import jakarta.persistence.*;
 import lombok.*;
@@ -53,7 +54,6 @@ public class Product {
                 .price(price)
                 .build();
     }
-
 
     @Override
     public boolean equals(Object o) {

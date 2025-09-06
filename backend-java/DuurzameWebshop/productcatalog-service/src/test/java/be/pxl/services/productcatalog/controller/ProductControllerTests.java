@@ -3,9 +3,11 @@ package be.pxl.services.productcatalog.controller;
 import be.pxl.services.productcatalog.domain.dto.ProductRequest;
 import be.pxl.services.productcatalog.domain.dto.ProductResponse;
 import be.pxl.services.productcatalog.service.IProductService;
+import be.pxl.services.productcatalog.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -24,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ProductController.class)
 class ProductControllerTests {
+    public final String ROLE_HEADER_VALUE = "admin";
+    public final String USER_ID_HEADER_VALUE = "1";
 
     @Autowired
     private MockMvc mockMvc;
@@ -76,62 +81,73 @@ class ProductControllerTests {
 
     @Test
     public void createProduct_shouldReturnCreatedStatus() throws Exception {
-        ProductRequest productRequest = new ProductRequest(1L,"Product1", "Description1", "category1", true, List.of("tag1", "tag2"), 100.0);
+        ProductRequest productRequest = new ProductRequest("Product1", "Description1", "category1", true, List.of("tag1", "tag2"), 100.0);
 
         mockMvc.perform(post("/api/product")
+                        .header("ROLE", ROLE_HEADER_VALUE)
+                        .header("USER_ID", USER_ID_HEADER_VALUE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productRequest)))
                 .andExpect(status().isCreated());
 
-        Mockito.verify(productServiceMock).addProduct(any(ProductRequest.class));
+        Mockito.verify(productServiceMock, Mockito.times(1)).addProduct(Mockito.anyLong(), any(ProductRequest.class));
     }
 
     @Test
     public void updateProduct_shouldReturnOkStatus() throws Exception {
-        ProductRequest productRequest = new ProductRequest(1L,"Product1", "Description1", "category2", true, List.of("tag1", "tag2","newTag"), 150.0);
+        ProductRequest productRequest = new ProductRequest("Product1", "Description1", "category2", true, List.of("tag1", "tag2","newTag"), 150.0);
 
         mockMvc.perform(put("/api/product/1")
+                        .header("ROLE", ROLE_HEADER_VALUE)
+                        .header("USER_ID", USER_ID_HEADER_VALUE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productRequest)))
                 .andExpect(status().isOk());
 
-        Mockito.verify(productServiceMock).updateProduct(eq(1L), any(ProductRequest.class));
+        Mockito.verify(productServiceMock).updateProduct(Mockito.anyLong(), eq(1L), any(ProductRequest.class));
     }
 
     @Test
     public void updateProduct_InvalidId_ShouldReturnNotFound() throws Exception {
         long invalidId = 1L;
-        ProductRequest productRequest = new ProductRequest(1L,"Product1", "Description1", "category2", true, List.of("tag1", "tag2","newTag"), 150.0);
+        ProductRequest productRequest = new ProductRequest("Product1", "Description1", "category2", true, List.of("tag1", "tag2","newTag"), 150.0);
 
-        Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND,"")).when(productServiceMock).updateProduct(invalidId, productRequest);
+        Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND,"")).when(productServiceMock).updateProduct(Mockito.anyLong(), Mockito.anyLong(), eq(productRequest));
 
 
         mockMvc.perform(put("/api/product/" + invalidId)
+                        .header("ROLE", ROLE_HEADER_VALUE)
+                        .header("USER_ID", USER_ID_HEADER_VALUE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productRequest)))
                     .andExpect(status().isNotFound());
 
-        Mockito.verify(productServiceMock).updateProduct(invalidId, productRequest);
+        Mockito.verify(productServiceMock).updateProduct(Mockito.anyLong(), eq(invalidId), eq(productRequest));
     }
 
     @Test
     public void deleteProduct_shouldReturnAcceptedStatus() throws Exception {
-        mockMvc.perform(delete("/api/product/1"))
+        long validId = 1L;
+        mockMvc.perform(delete("/api/product/1")
+                        .header("ROLE", ROLE_HEADER_VALUE)
+                        .header("USER_ID", USER_ID_HEADER_VALUE))
                 .andExpect(status().isAccepted());
 
-        Mockito.verify(productServiceMock).deleteProduct(1L);
+        Mockito.verify(productServiceMock).deleteProduct(Mockito.anyLong(), eq(validId));
     }
 
     @Test
     public void deleteProduct_InvalidId_ShouldReturnNotFound() throws Exception {
         long invalidId = 1L;
-        Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND,"")).when(productServiceMock).deleteProduct(invalidId);
+        Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND,"")).when(productServiceMock).deleteProduct(Mockito.anyLong(), eq(invalidId));
 
 
-        mockMvc.perform(delete("/api/product/" + invalidId))
+        mockMvc.perform(delete("/api/product/" + invalidId)
+                        .header("ROLE", ROLE_HEADER_VALUE)
+                        .header("USER_ID", USER_ID_HEADER_VALUE))
                 .andExpect(status().isNotFound());
 
-        Mockito.verify(productServiceMock).deleteProduct(invalidId);
+        Mockito.verify(productServiceMock).deleteProduct(Mockito.anyLong(), eq(invalidId));
     }
 }
 
