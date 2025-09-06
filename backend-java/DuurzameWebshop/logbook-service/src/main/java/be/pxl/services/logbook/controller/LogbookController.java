@@ -2,16 +2,13 @@ package be.pxl.services.logbook.controller;
 
 import be.pxl.services.logbook.domain.dto.ProductLogResponse;
 import be.pxl.services.logbook.exception.AuthorizationException;
-import be.pxl.services.logbook.exception.ConflictException;
 import be.pxl.services.logbook.service.ILogbookService;
-import jakarta.ws.rs.HeaderParam;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.Map;
 
