@@ -42,7 +42,8 @@ public class LogbookController {
     }
 
     private void checkAuthorization(Map<String, String> headers) {
-        if (headers.get("ROLE") != "admin" || headers.get("ROLE") != "ADMIN") {
+        String role = headers.get("ROLE");
+        if (!role.equalsIgnoreCase("admin")) {
             LOG.debug("You are not authorized to access the logbook");
             throw new AuthorizationException("You are not allowed to access this resource.");
         }
