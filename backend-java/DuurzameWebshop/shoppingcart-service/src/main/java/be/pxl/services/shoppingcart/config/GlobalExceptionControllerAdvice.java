@@ -1,14 +1,16 @@
 package be.pxl.services.shoppingcart.config;
 
 import be.pxl.services.shoppingcart.controller.model.ApiError;
-import be.pxl.services.shoppingcart.service.exception.ConflictException;
+import be.pxl.services.shoppingcart.exception.AuthorizationException;
+import be.pxl.services.shoppingcart.exception.ConflictException;
+import be.pxl.services.shoppingcart.exception.ResourceNotFoundException;
+import com.fasterxml.jackson.core.JsonParseException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import be.pxl.services.shoppingcart.service.exception.ResourceNotFoundException;
 
 import java.util.stream.Collectors;
 
@@ -25,6 +27,13 @@ public class GlobalExceptionControllerAdvice {
     @ExceptionHandler({ConflictException.class})
     public ResponseEntity<Object> handleConflictException(ConflictException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
+        ApiError error = new ApiError(status, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler({AuthorizationException.class})
+    public ResponseEntity<Object> handleAuthorizationException(AuthorizationException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         ApiError error = new ApiError(status, ex.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(error);
     }
@@ -47,5 +56,12 @@ public class GlobalExceptionControllerAdvice {
         return ResponseEntity
                 .status(error.getStatus())
                 .body(error);
+    }
+
+    @ExceptionHandler({JsonParseException.class})
+    public ResponseEntity<Object> handleJsonParseException(JsonParseException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ApiError error = new ApiError(status, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
     }
 }
