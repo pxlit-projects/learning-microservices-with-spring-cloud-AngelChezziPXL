@@ -16,7 +16,7 @@ import java.util.Map;
 @RequestMapping(value = "/api/logbook", headers = "ROLE")
 @RequiredArgsConstructor
 public class LogbookController {
-    Logger logger = LoggerFactory.getLogger(LogbookController.class);
+    private Logger LOG = LoggerFactory.getLogger(LogbookController.class);
     private final ILogbookService logbookService;
 
 
@@ -26,8 +26,8 @@ public class LogbookController {
     @ResponseStatus(HttpStatus.OK)
     public List<ProductLogResponse> getAll(@RequestHeader Map<String, String> headers) {
         checkAuthorization(headers);
-        logger.debug("Controller method getAll() invoked");
-        logger.info("Fetching all logbook entries.");
+        LOG.debug("Controller method getAll() invoked");
+        LOG.info("Fetching all logbook entries.");
         return logbookService.getAll();
     }
 
@@ -36,14 +36,14 @@ public class LogbookController {
     @ResponseStatus(HttpStatus.OK)
     public List<ProductLogResponse> getAllById(@RequestHeader Map<String, String> headers, @RequestParam long productid) {
         checkAuthorization(headers);
-        logger.debug("Controller method getAllById() invoked");
-        logger.info("Fetching all logbook entries for id {}.", productid);
+        LOG.debug("Controller method getAllById() invoked");
+        LOG.info("Fetching all logbook entries for id {}.", productid);
         return logbookService.getAllByProductId(productid);
     }
 
     private void checkAuthorization(Map<String, String> headers) {
         if (headers.get("ROLE") != "admin" || headers.get("ROLE") != "ADMIN") {
-            logger.debug("You are not authorized to access the logbook");
+            LOG.debug("You are not authorized to access the logbook");
             throw new AuthorizationException("You are not allowed to access this resource.");
         }
     }
