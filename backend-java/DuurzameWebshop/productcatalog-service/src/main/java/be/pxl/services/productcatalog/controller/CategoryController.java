@@ -42,7 +42,7 @@ public class CategoryController {
     public void createCategory(@RequestHeader Map<String, String> headers, @Valid @RequestBody CategoryRequest categoryRequest) {
         LOG.info("Creating new Category...");
         checkAuthorization(headers);
-        long userId = Long.parseLong(headers.get("USER_ID"));
+        long userId = Long.parseLong(headers.get("user_id"));
         categoryService.addCategory(userId, categoryRequest);
     }
 
@@ -52,7 +52,7 @@ public class CategoryController {
         LOG.info("Updating CategoryName ...");
         checkAuthorization(headers);
         String categoryName = categoryRequest.getCategoryName().trim().toLowerCase();
-        long userId = Long.parseLong(headers.get("USER_ID"));
+        long userId = Long.parseLong(headers.get("user_id"));
         categoryService.updateCategoryName(userId, id, categoryName);
     }
 
@@ -61,14 +61,14 @@ public class CategoryController {
     public void deleteCategory(@RequestHeader Map<String, String> headers, @PathVariable @Positive Long id) throws JsonProcessingException {
         LOG.info("Deleting category...");
         checkAuthorization(headers);
-        long userId = Long.parseLong(headers.get("USER_ID"));
+        long userId = Long.parseLong(headers.get("user_id"));
         categoryService.deleteCategoryById(userId, id);
     }
 
     //PRIVATE HELPER METHODS
     private void checkAuthorization(Map<String, String> headers) {
-        String role = headers.get("ROLE");
-        long userId = Long.parseLong(headers.get("USER_ID"));
+        String role = headers.get("role");
+        long userId = headers.get("user_id") != null ? Long.parseLong(headers.get("user_id")): 0;
         if (!role.equalsIgnoreCase("admin")) {
             LOG.debug("You are not authorized to access the logbook");
             throw new AuthorizationException("You are not allowed to access this resource.");

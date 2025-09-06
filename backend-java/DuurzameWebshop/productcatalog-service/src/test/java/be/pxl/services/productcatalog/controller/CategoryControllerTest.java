@@ -102,8 +102,8 @@ public class CategoryControllerTest {
 
         //ACT & ASSERT
         var response = mockMvc.perform(post(CATEGORY_URL)
-                        .header("ROLE","ADMIN")
-                        .header("USER_ID", "1")
+                        .header("role","ADMIN")
+                        .header("user_id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isCreated());
@@ -140,8 +140,8 @@ public class CategoryControllerTest {
 
         //ACT & ASSERT
         var response = mockMvc.perform(put(requestURL)
-                        .header("ROLE","ADMIN")
-                        .header("USER_ID", "1")
+                        .header("role","ADMIN")
+                        .header("user_id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isAccepted());
@@ -162,8 +162,8 @@ public class CategoryControllerTest {
 
         //ACT & ASSERT
         var response = mockMvc.perform(put(requestURL)
-                        .header("ROLE","ADMIN")
-                        .header("USER_ID", "1")
+                        .header("role","ADMIN")
+                        .header("user_id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isNotFound());
@@ -184,8 +184,8 @@ public class CategoryControllerTest {
 
         //ACT & ASSERT
         var response = mockMvc.perform(put(requestURL)
-                        .header("ROLE","ADMIN")
-                        .header("USER_ID", "1")
+                        .header("role","admin")
+                        .header("user_id", "1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isConflict());
@@ -203,8 +203,8 @@ public class CategoryControllerTest {
 
         //ACT & ASSERT
         var response = mockMvc.perform(delete(requestURL)
-                    .header("ROLE","ADMIN")
-                    .header("USER_ID", "1"))
+                    .header("role","admin")
+                    .header("user_id", "1"))
                 .andExpect(status().isNoContent());
 
         Mockito.verify(categoryServiceMock, Mockito.times(1)).deleteCategoryById(Mockito.anyLong(), eq(validId));
@@ -220,8 +220,8 @@ public class CategoryControllerTest {
 
         //ACT & ASSERT
         var response = mockMvc.perform(delete(requestURL)
-                        .header("ROLE","ADMIN")
-                        .header("USER_ID", "1"))
+                        .header("role","admin")
+                        .header("user_id", "1"))
                 .andExpect(status().isNotFound());
 
         Mockito.verify(categoryServiceMock, Mockito.times(1)).deleteCategoryById(Mockito.anyLong(), eq(invalidId));

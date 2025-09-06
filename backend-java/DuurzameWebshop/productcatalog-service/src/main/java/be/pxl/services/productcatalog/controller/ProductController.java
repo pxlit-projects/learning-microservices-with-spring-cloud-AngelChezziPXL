@@ -41,7 +41,7 @@ public class ProductController {
     public void createProduct(@RequestHeader Map<String,String> headers, @Valid @RequestBody ProductRequest productRequest) throws JsonProcessingException {
         LOG.info("Create product called.");
         checkAuthorization(headers);
-        long userId = Long.parseLong(headers.get("USER_ID"));
+        long userId = Long.parseLong(headers.get("user_id"));
         productService.addProduct(userId, productRequest);
     }
 
@@ -49,7 +49,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)                      // om te kunnen updaten, categoriseren, labelen van producten
     public void updateProduct(@RequestHeader Map<String,String> headers,@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) throws JsonProcessingException {
         checkAuthorization(headers);
-        long userId = Long.parseLong(headers.get("USER_ID"));
+        long userId = Long.parseLong(headers.get("user_id"));
         productService.updateProduct(userId, id, productRequest);
     }
 
@@ -57,14 +57,14 @@ public class ProductController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void deleteProduct(@RequestHeader Map<String,String> headers,@PathVariable Long id) throws JsonProcessingException {
         checkAuthorization(headers);
-        long userId = Long.parseLong(headers.get("USER_ID"));
+        long userId = Long.parseLong(headers.get("user_id"));
         productService.deleteProduct(userId, id);
     }
 
     //PRIVATE HELPER METHODS
     private void checkAuthorization(Map<String, String> headers) {
-        String role = headers.get("ROLE");
-        long userId = Long.parseLong(headers.get("USER_ID"));
+        String role = headers.get("role");
+        long userId = headers.get("user_id") != null ? Long.parseLong(headers.get("user_id")): 0;
         if (!role.equalsIgnoreCase("admin")) {
             LOG.debug("You are not authorized to access the logbook");
             throw new AuthorizationException("You are not allowed to access this resource.");
