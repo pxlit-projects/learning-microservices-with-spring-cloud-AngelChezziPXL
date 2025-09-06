@@ -46,10 +46,8 @@ public class ProductLog {
                 .build();
     }
 
-    public ProductLogRequest toProductLogRequest() {
+    public ProductLogRequest toProductLogRequest() {            //No ID and timestamp because the entity will do it
         return ProductLogRequest.builder()
-                .id(id)
-                .timestamp(timeStamp)
                 .userId(userId)
                 .productId(productId)
                 .name(name)
@@ -60,4 +58,5 @@ public class ProductLog {
                 .price(price)
                 .build();
     }
+
 }

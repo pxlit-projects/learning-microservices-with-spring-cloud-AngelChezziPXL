@@ -2,6 +2,7 @@ package be.pxl.services.logbook.config;
 
 
 import be.pxl.services.logbook.controller.model.ApiError;
+import be.pxl.services.logbook.exception.AuthorizationException;
 import be.pxl.services.logbook.exception.ConflictException;
 import be.pxl.services.logbook.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -27,6 +28,13 @@ public class GlobalExceptionControllerAdvice {
     @ExceptionHandler({ConflictException.class})
     public ResponseEntity<Object> handleConflictException(ConflictException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
+        ApiError error = new ApiError(status, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(error);
+    }
+
+    @ExceptionHandler({AuthorizationException.class})
+    public ResponseEntity<Object> handleAuthorizationException(AuthorizationException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         ApiError error = new ApiError(status, ex.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(error);
     }

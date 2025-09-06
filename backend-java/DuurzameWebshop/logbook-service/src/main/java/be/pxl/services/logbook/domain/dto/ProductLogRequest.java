@@ -18,9 +18,6 @@ import java.util.List;
 @Builder
 public class ProductLogRequest {
     @NotNull
-    private long id;
-    LocalDateTime timestamp;
-    @NotNull
     private long userId;
     @NotNull
     private long productId;
@@ -37,8 +34,6 @@ public class ProductLogRequest {
 
     public ProductLog toProductLog() {
         return ProductLog.builder()
-                .id(id)
-                .timeStamp(timestamp)
                 .userId(userId)
                 .productId(productId)
                 .name(name)

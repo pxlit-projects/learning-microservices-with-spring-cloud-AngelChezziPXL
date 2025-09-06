@@ -1,5 +1,6 @@
 package be.pxl.services.logbook.domain.dto;
 
+import be.pxl.services.logbook.domain.ProductLog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +24,18 @@ public class ProductLogResponse {
     private List<String> tags;
     private double price;
 
+    public ProductLog toProductLog() {
+         return ProductLog.builder()
+                 .id(id)
+                 .timeStamp(timestamp)
+                 .userId(userId)
+                 .productId(productId)
+                 .name(name)
+                 .description(description)
+                 .categoryName(categoryName)
+                 .available(available)
+                 .tags(tags)
+                 .price(price)
+                 .build();
+    }
 }
