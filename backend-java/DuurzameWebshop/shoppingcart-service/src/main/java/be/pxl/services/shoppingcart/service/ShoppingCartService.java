@@ -61,7 +61,7 @@ public class ShoppingCartService implements IShoppingCartService {
 
     private boolean userHasShoppingCart(long userId) {
         ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId).orElse(null);
-        return shoppingCart == null ? false : true;
+        return shoppingCart != null;
     }
 
     private ShoppingCart getShoppingCartFromDb (long id){
