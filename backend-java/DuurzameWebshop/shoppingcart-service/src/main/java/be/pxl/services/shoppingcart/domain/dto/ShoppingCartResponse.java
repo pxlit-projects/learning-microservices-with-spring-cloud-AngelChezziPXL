@@ -17,6 +17,6 @@ public class ShoppingCartResponse {
     private long shoppingCartId;
     @Min(1)
     private long userId;
-    private ShoppingCartStatus status = ShoppingCartStatus.ACTIVE;
+    private ShoppingCartStatus status;
     private List<ItemResponse> itemResponseList = new ArrayList<>();
 }
