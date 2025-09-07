@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name="product-catalog")
+@FeignClient(name="productcatalog-service")
 public interface ProductClient {
     @GetMapping("/api/product")
-    List<ProductResponse> getAllProducts(@RequestBody ProductRequest productRequest);
+    List<ProductResponse> getAllProducts();
 }
