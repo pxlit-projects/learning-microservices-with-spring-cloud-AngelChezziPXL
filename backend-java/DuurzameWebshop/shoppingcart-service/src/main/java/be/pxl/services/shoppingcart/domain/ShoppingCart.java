@@ -20,19 +20,11 @@ public class ShoppingCart {
     private Long id;
     private long userId;
     @Enumerated(EnumType.STRING)
-    private ShoppingCartStatus status;
+    private ShoppingCartStatus status = ShoppingCartStatus.ACTIVE;
     @OneToMany(mappedBy = "shoppingcart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Item> items = new ArrayList<>();
 
     //Methods
-    public double calculateTotalAmount() {
-        double total = 0;
-        for(Item item : items) {
-            total += item.getPrice() * item.getQuantity();
-        }
-        return total;
-    }
-
     public void addItem(Item item) {
         if(!items.contains(item)) {
             items.add(item);
@@ -40,6 +32,11 @@ public class ShoppingCart {
         } else {
             item.addQuantity(item.getQuantity());
         }
+    }
+
+    public void removeItem(Item item) {
+        if(!items.contains(item)){return;}
+        items.remove(item);
     }
 
     public ShoppingCartDto toShoppingCartDto() {
