@@ -39,5 +39,14 @@ public class ShoppingCartDto {
                 .build();
     }
 
+    public ShoppingCartResponse toShoppingCartResponse() {
+        return ShoppingCartResponse.builder()
+                .shoppingCartId(id)
+                .userId(userId)
+                .status(status)
+                .itemResponseList(itemDtos.stream().map(ItemDto::toItemResponse).toList())
+                .build();
+    }
+
 
 }

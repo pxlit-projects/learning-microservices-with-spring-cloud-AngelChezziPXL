@@ -34,5 +34,15 @@ public class ItemDto {
                 .build();
     }
 
+    public ItemResponse toItemResponse(){
+        return ItemResponse.builder()
+                .id(id)
+                .productId(productId)
+                .name(name)
+                .description(description)
+                .price(price)
+                .quantity(quantity)
+                .build();
+    }
 
 }
