@@ -2,15 +2,14 @@ package be.pxl.services.shoppingcart.domain.dto;
 
 import be.pxl.services.shoppingcart.domain.ShoppingCartStatus;
 import jakarta.validation.constraints.Min;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ShoppingCartResponse {
     @Min(1)
