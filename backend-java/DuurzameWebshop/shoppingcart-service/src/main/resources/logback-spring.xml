@@ -6,7 +6,10 @@
         <file>${LOG_PATH}/app.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/app.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>15</maxHistory>
+			<maxFileSize>50MB</maxFileSize>   <!-- rollover once a file reaches 50 MB -->
+			<maxHistory>10</maxHistory>       <!-- keep 30 days -->
+			<totalSizeCap>1GB</totalSizeCap>  <!-- cap across all archives -->
+			
         </rollingPolicy>
         <encoder>
             <Pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSZZ} %-5level %-12X{process} %-30([%thread]) %-29logger - %m%n</Pattern>
@@ -14,7 +17,7 @@
     </appender>
 
     <!-- API module file appender -->
-    <appender name="API_LOGGER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+<!--    <appender name="API_LOGGER" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/api_logging.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/api_logging.%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -23,18 +26,18 @@
         <encoder>
             <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %m%n</Pattern>
         </encoder>
-    </appender>
+    </appender>-->
 
-    <!-- Root logger for the whole project -->
+<!--    <!{1}** Root logger for the whole project **{1}>
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="APP_LOGGER"/>
     </root>
 
-    <!-- API module logger: goes also to API_LOGGER -->
-    <logger name="be.pxl.services.shoppingcart" level="DEBUG" additivity="true">
+    <!{1}** API module logger: goes also to API_LOGGER **{1}>
+    <logger name="be.pxl.services.logbook" level="DEBUG" additivity="true">
         <appender-ref ref="API_LOGGER"/>
-    </logger>
+    </logger>-->
 
 
 </configuration>
