@@ -1,12 +1,15 @@
 package be.pxl.services.shoppingcart.service;
 
 import be.pxl.services.shoppingcart.client.ProductClient;
+import be.pxl.services.shoppingcart.client.WhishListClient;
 import be.pxl.services.shoppingcart.domain.Item;
 import be.pxl.services.shoppingcart.domain.ShoppingCart;
+import be.pxl.services.shoppingcart.domain.ShoppingCartStatus;
 import be.pxl.services.shoppingcart.domain.dto.*;
 import be.pxl.services.shoppingcart.domain.factory.IItemFactory;
 import be.pxl.services.shoppingcart.exception.ConflictException;
 import be.pxl.services.shoppingcart.exception.ResourceNotFoundException;
+import be.pxl.services.shoppingcart.repository.IItemRepository;
 import be.pxl.services.shoppingcart.repository.IShoppingCartRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.NotImplementedException;
@@ -19,8 +22,10 @@ import java.util.List;
 public class ShoppingCartService implements IShoppingCartService {
 
     private final IShoppingCartRepository shoppingCartRepository;
+    private final IItemRepository itemRepository;
     private final ProductClient productClient;
     private final IItemFactory itemFactory;
+    private final WhishListClient whishListClient;
 
 
     @Override
@@ -45,20 +50,35 @@ public class ShoppingCartService implements IShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto removeItemByItemId(Long itemId) {
-        throw new NotImplementedException();
+    public ShoppingCartDto removeItemByItemId(long shoppinCartId, long itemId)
+    {
+        ShoppingCart shoppingCart = getShoppingCartFromDb(shoppinCartId);
+        shoppingCart.removeItem(getItemFromDb(itemId));
+        return shoppingCartRepository.save(shoppingCart).toShoppingCartDto();
+    }
+
+
+    @Override
+    public ShoppingCartDto doOrder(long shoppingCartId) {
+        ShoppingCart shoppingCart = getShoppingCartFromDb(shoppingCartId);
+        shoppingCart.setStatus(ShoppingCartStatus.ORDER);
+        return shoppingCartRepository.save(shoppingCart).toShoppingCartDto();
     }
 
     @Override
-    public void publishShoppingCartToWishList() {
-        throw new NotImplementedException();
+    public ShoppingCartDto checkOut(long shoppingCartId) {
+        ShoppingCart shoppingCart = getShoppingCartFromDb(shoppingCartId);
+        shoppingCart.setStatus(ShoppingCartStatus.PAYED);
+        return shoppingCartRepository.save(shoppingCart).toShoppingCartDto();
     }
 
     @Override
-    public void doOrder() {
-        throw new NotImplementedException();
+    public void publishShoppingCartToWhishlist(long userId, long shoppingCartId) {
+        ShoppingCart shoppingCart = getShoppingCartFromDb(shoppingCartId);
+        whishListClient.publishToWhishList(shoppingCart.toShoppingCartDto().toShoppingCartResponse());
     }
 
+    // PRIVATE HELPER METHODS
     private boolean userHasShoppingCart(long userId) {
         ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId).orElse(null);
         return shoppingCart != null;
@@ -68,6 +88,12 @@ public class ShoppingCartService implements IShoppingCartService {
         ShoppingCart shoppingCart = shoppingCartRepository.findById(id).orElse(null);
         if(shoppingCart != null) {throw new ResourceNotFoundException("Shopping cart with id " + id + " not found.");}
         return shoppingCart;
+    }
+
+    private Item getItemFromDb (long id){
+        Item item = itemRepository.findById(id).orElse(null);
+        if(item == null) {throw new ResourceNotFoundException("Item with id " + id + " not found.");}
+        return item;
     }
 
 }

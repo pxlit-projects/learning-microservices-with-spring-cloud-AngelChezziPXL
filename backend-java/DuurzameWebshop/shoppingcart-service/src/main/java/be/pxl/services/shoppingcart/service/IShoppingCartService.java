@@ -12,8 +12,8 @@ public interface IShoppingCartService {
     List<ProductResponse> getAllProducts();
     ShoppingCartDto createNewShoppingcart(long userId);
     ShoppingCartDto addItemToShoppingcart(long userId, ItemNewRequest itemNewRequest);
-    ShoppingCartDto removeItemByItemId(Long itemId);
-    void publishShoppingCartToWishList();
-    void doOrder();
-
+    ShoppingCartDto removeItemByItemId(long shoppincartId, long itemId);
+    ShoppingCartDto doOrder(long shoppingcartId);
+    ShoppingCartDto checkOut(long shoppingCartId);
+    void publishShoppingCartToWhishlist(long userId, long shoppingCartId);
 }
