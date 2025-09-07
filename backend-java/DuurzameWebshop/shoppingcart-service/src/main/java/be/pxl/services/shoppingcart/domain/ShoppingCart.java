@@ -28,9 +28,18 @@ public class ShoppingCart {
     public double calculateTotalAmount() {
         double total = 0;
         for(Item item : items) {
-            total += item.getProduct().getPrice() * item.getQuantity();
+            total += item.getPrice() * item.getQuantity();
         }
         return total;
+    }
+
+    public void addItem(Item item) {
+        if(!items.contains(item)) {
+            items.add(item);
+            item.setShoppingCart(this);
+        } else {
+            item.addQuantity(item.getQuantity());
+        }
     }
 
     public ShoppingCartDto toShoppingCartDto() {
@@ -42,12 +51,11 @@ public class ShoppingCart {
                 .build();
     }
 
-    public static ShoppingCart createNewShoppingcart(long userId){
+    public static ShoppingCart createNew(long userId) {
         return ShoppingCart.builder()
                 .userId(userId)
                 .status(ShoppingCartStatus.ACTIVE)
                 .items(new ArrayList<>())
                 .build();
     }
-
 }
