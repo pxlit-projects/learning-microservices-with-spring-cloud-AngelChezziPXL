@@ -1,22 +1,24 @@
 package be.pxl.services.shoppingcart.domain.dto;
 
-import be.pxl.services.shoppingcart.domain.Item;
 import be.pxl.services.shoppingcart.domain.ShoppingCart;
+import be.pxl.services.shoppingcart.domain.ShoppingCartStatus;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ShoppingCartDto {
     private Long id;
     private long userId;
+    private ShoppingCartStatus status;
     private List<ItemDto> itemDtos = new ArrayList<>();
 
 
@@ -28,32 +30,14 @@ public class ShoppingCartDto {
         return total;
     }
 
-    public static ShoppingCartDto fromShoppingCart(ShoppingCart shoppingCart) {
-        ShoppingCartDto dto = new ShoppingCartDto();
-        dto.setId(shoppingCart.getId());
-        dto.setUserId(shoppingCart.getUserId());
-
-        List<ItemDto> itemDtos = new ArrayList<>();
-        for (Item item : shoppingCart.getItems()) {
-            ItemDto itemDto = ItemDto.fromCartItem(item);
-            itemDtos.add(itemDto);
-        }
-        dto.setItemDtos(itemDtos);
-
-        return dto;
-    }
-
-    public ShoppingCart ToShoppingCart() {
-        List<Item> items = new ArrayList<>();
-        for (ItemDto itemDto : this.itemDtos) {
-            items.add(itemDto.toCartItem());
-        }
-
-        ShoppingCart shoppingCart = ShoppingCart.builder()
+    public ShoppingCart toShoppingCart() {
+        return ShoppingCart.builder()
                 .id(this.id)
                 .userId(this.userId)
-                .items(items)
+                .status(this.status)
+                .items(itemDtos.stream().map(ItemDto::toItem).collect(Collectors.toList()))
                 .build();
-        return shoppingCart;
     }
+
+
 }

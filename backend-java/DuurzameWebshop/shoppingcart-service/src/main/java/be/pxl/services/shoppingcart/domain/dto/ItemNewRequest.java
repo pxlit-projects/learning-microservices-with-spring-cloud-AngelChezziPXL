@@ -15,7 +15,4 @@ public class ItemNewRequest {
     private long productId;
     @Positive
     private int quantity;
-    @NotBlank
-    private String description;
-
 }

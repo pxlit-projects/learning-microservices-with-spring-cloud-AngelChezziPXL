@@ -3,32 +3,31 @@ package be.pxl.services.shoppingcart.domain.dto;
 import be.pxl.services.shoppingcart.domain.Product;
 import lombok.*;
 
+import java.util.List;
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Builder
 public class ProductDto {
 
     private Long id;
     private String name;
     private String description;
-    private Double price;
+    private String categoryName;
+    private Boolean available;
+    private List<String> tags;
+    private double price;
 
-    public static ProductDto fromProduct(Product product) {
-        ProductDto productDto = new ProductDto();
-        productDto.setId(product.getId());
-        productDto.setName(product.getName());
-        productDto.setDescription(product.getDescription());
-        productDto.setPrice(product.getPrice());
-        return productDto;
-    }
-
-    public static Product toProduct(ProductDto productDto) {
-        Product product = new Product();
-        product.setId(productDto.getId());
-        product.setName(productDto.getName());
-        product.setDescription(productDto.getDescription());
-        product.setPrice(productDto.getPrice());
-        return product;
+    public Product toProduct() {
+        return Product.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .categoryName(categoryName)
+                .available(available)
+                .tags(tags)
+                .price(price)
+                .build();
     }
 }

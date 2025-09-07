@@ -1,11 +1,14 @@
 package be.pxl.services.shoppingcart.domain;
 
+import be.pxl.services.shoppingcart.domain.dto.ItemDto;
 import be.pxl.services.shoppingcart.domain.dto.ItemResponse;
+import be.pxl.services.shoppingcart.domain.dto.ShoppingCartDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,9 @@ public class Item {
     @Transient
     private Product product;
     private int quantity;
+    @ManyToOne
+    private ShoppingCart shoppingCart;
+
 
     //Methods
     public double calculateLineTotal() {
@@ -33,45 +39,24 @@ public class Item {
         return Math.round(lineTotal * 100.0) / 100.0;               // will be rounded to 0.01 precision
     }
 
-    @ManyToMany(mappedBy = "items")
-    private List<ShoppingCart> carts= new ArrayList<>();
-
-    public void addShoppingCart(ShoppingCart cart) {
-        if(carts.contains(cart)) {return;}
-        carts.add(cart);
-        cart.addShoppingCartItem(this);
-    }
-
-    public void removeShoppingCart(ShoppingCart shoppingCart) {
-        if(!carts.contains(shoppingCart)) {return;}
-        carts.remove(shoppingCart);
-        shoppingCart.removeShoppingCartItem(this);
-    }
-
-    public ItemResponse toItemResponse() {
-        return ItemResponse.builder()
+    public ItemDto toItemDto() {
+        return ItemDto.builder()
                 .id(id)
-                .productId(product.getId())
-                .name(product.getName())
-                .description(product.getDescription())
-                .categoryName(product.getName())
-                .available(product.getAvailable())
-                .tags(product.getTags())
-                .price(product.getPrice())
+                .productId(productId)
+                .productDto(product.toProductDto())
                 .quantity(quantity)
+                .shoppingCartDto(shoppingCart.toShoppingCartDto())
                 .build();
     }
 
-
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Item that)) return false;
-        return Double.compare(quantity, that.quantity) == 0 && Objects.equals(id, that.id) && Objects.equals(carts, that.carts);
+        if (!(o instanceof Item item)) return false;
+        return quantity == item.quantity && Objects.equals(id, item.id) && Objects.equals(productId, item.productId) && Objects.equals(product, item.product) && Objects.equals(shoppingCart, item.shoppingCart);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, quantity, carts);
+        return Objects.hash(id, productId, product, quantity, shoppingCart);
     }
-
 }

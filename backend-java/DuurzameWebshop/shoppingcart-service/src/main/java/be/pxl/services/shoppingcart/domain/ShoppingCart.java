@@ -1,5 +1,6 @@
 package be.pxl.services.shoppingcart.domain;
 
+import be.pxl.services.shoppingcart.domain.dto.ShoppingCartDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,10 +21,8 @@ public class ShoppingCart {
     private long userId;
     @Enumerated(EnumType.STRING)
     private ShoppingCartStatus status;
-    @ManyToMany
-    @JoinTable(name= "shoppingcart_item", joinColumns = @JoinColumn(name= "cart_id"), inverseJoinColumns = @JoinColumn(name= "item_id"))
+    @OneToMany(mappedBy = "shoppingcart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Item> items = new ArrayList<>();
-
 
     //Methods
     public double calculateTotalAmount() {
@@ -34,27 +33,21 @@ public class ShoppingCart {
         return total;
     }
 
-    public void addShoppingCartItem(Item item) {
-        if(items.contains(item)) {return;}
-        items.add(item);
-        item.addShoppingCart(this);
+    public ShoppingCartDto toShoppingCartDto() {
+        return ShoppingCartDto.builder()
+                .id(id)
+                .userId(userId)
+                .status(status)
+                .itemDtos(items.stream().map(Item::toItemDto).toList())
+                .build();
     }
 
-    public void removeShoppingCartItem(Item item) {
-        if(!items.contains(item)) {return;}
-        items.remove(item);
-        item.removeShoppingCart(this);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof ShoppingCart that)) return false;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
+    public static ShoppingCart createNewShoppingcart(long userId){
+        return ShoppingCart.builder()
+                .userId(userId)
+                .status(ShoppingCartStatus.ACTIVE)
+                .items(new ArrayList<>())
+                .build();
     }
 
 }
