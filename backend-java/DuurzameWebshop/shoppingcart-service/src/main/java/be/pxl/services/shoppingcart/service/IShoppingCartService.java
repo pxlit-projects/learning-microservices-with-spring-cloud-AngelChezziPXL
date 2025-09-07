@@ -1,17 +1,19 @@
 package be.pxl.services.shoppingcart.service;
 
 
-import be.pxl.services.shoppingcart.domain.dto.ItemResponse;
-import be.pxl.services.shoppingcart.domain.dto.ItemDto;
+import be.pxl.services.shoppingcart.domain.dto.ItemNewRequest;
+import be.pxl.services.shoppingcart.domain.dto.ProductResponse;
+import be.pxl.services.shoppingcart.domain.dto.ShoppingCartDto;
 
 import java.util.List;
 
 public interface IShoppingCartService {
 
-    void addItemToShoppingCart(ItemDto itemDto);
-    void removeItemById(Long id);
-    void saveWishList();
+    List<ProductResponse> getAllProducts();
+    ShoppingCartDto createNewShoppingcart(long userId);
+    ShoppingCartDto addItemToShoppingcart(long userId, long shoppingcartId, ItemNewRequest itemNewRequest);
+    ShoppingCartDto removeItemByItemId(Long itemId);
+    void publishShoppingCartToWishList();
     void doOrder();
 
-    List<ItemResponse> getAllItemsWithProductDetails();
 }
