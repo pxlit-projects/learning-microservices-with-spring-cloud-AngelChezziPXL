@@ -36,6 +36,7 @@ public class ShoppingCartService implements IShoppingCartService {
     @Override
     public ShoppingCartDto addItemToShoppingcart(long userId, long shoppingcartId, ItemNewRequest itemNewRequest) {
         ShoppingCart shoppingCart = getShoppingCartFromDb(shoppingcartId);
+
         throw new NotImplementedException("Not implemented yet");
     }
 
