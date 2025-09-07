@@ -25,7 +25,7 @@ public class ShoppingCartDto {
     public double calculateTotalAmount(){
         double total = 0;
         for (ItemDto itemDto : itemDtos) {
-            total += itemDto.getQuantity() * itemDto.getProductDto().getPrice();
+            total += itemDto.getQuantity() * itemDto.getPrice();
         }
         return total;
     }

@@ -7,15 +7,6 @@ import java.util.List;
 
 @Service
 public class ItemService implements IItemService {
-    @Override
-    public ItemDto addNewItem(ItemDto itemDto) {
-        return null;
-    }
-
-    @Override
-    public ItemDto updateItem(ItemDto itemDto) {
-        return null;
-    }
 
     @Override
     public ItemDto getItemById(long id) {

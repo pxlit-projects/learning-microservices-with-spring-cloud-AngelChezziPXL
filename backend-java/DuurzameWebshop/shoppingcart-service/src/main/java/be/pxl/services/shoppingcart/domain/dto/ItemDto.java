@@ -15,18 +15,22 @@ public class ItemDto {
 
     private Long id;
     private Long productId;
-    private ProductDto productDto;
+    private ShoppingCartDto shoppingCartDto;
+    private String name;
+    private String description;
+    private double price;
     private int quantity;
-    ShoppingCartDto shoppingCartDto;
 
 
     public Item toItem(){
         return Item.builder()
                 .id(id)
                 .productId(productId)
-                .product(productDto.toProduct())
-                .quantity(quantity)
                 .shoppingCart(shoppingCartDto.toShoppingCart())
+                .name(name)
+                .description(description)
+                .price(price)
+                .quantity(quantity)
                 .build();
     }
 

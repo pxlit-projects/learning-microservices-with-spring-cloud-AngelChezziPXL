@@ -1,8 +1,10 @@
 package be.pxl.services.shoppingcart.service;
 
 import be.pxl.services.shoppingcart.client.ProductClient;
+import be.pxl.services.shoppingcart.domain.Item;
 import be.pxl.services.shoppingcart.domain.ShoppingCart;
 import be.pxl.services.shoppingcart.domain.dto.*;
+import be.pxl.services.shoppingcart.domain.factory.IItemFactory;
 import be.pxl.services.shoppingcart.exception.ConflictException;
 import be.pxl.services.shoppingcart.exception.ResourceNotFoundException;
 import be.pxl.services.shoppingcart.repository.IShoppingCartRepository;
@@ -18,6 +20,7 @@ public class ShoppingCartService implements IShoppingCartService {
 
     private final IShoppingCartRepository shoppingCartRepository;
     private final ProductClient productClient;
+    private final IItemFactory itemFactory;
 
 
     @Override
@@ -27,17 +30,18 @@ public class ShoppingCartService implements IShoppingCartService {
 
     @Override
     public ShoppingCartDto createNewShoppingcart(long userId) {
-        ShoppingCart newShoppinCart =  ShoppingCart.createNewShoppingcart(userId);
+        ShoppingCart newShoppinCart = ShoppingCart.createNew(userId);
         if (userHasShoppingCart(userId)) { throw new ConflictException("User already has shopping cart."); }
         return shoppingCartRepository.save(newShoppinCart).toShoppingCartDto();
     }
 
 
     @Override
-    public ShoppingCartDto addItemToShoppingcart(long userId, long shoppingcartId, ItemNewRequest itemNewRequest) {
-        ShoppingCart shoppingCart = getShoppingCartFromDb(shoppingcartId);
-
-        throw new NotImplementedException("Not implemented yet");
+    public ShoppingCartDto addItemToShoppingcart(long userId, ItemNewRequest itemNewRequest) {
+        ShoppingCart shoppingCart = getShoppingCartFromDb(itemNewRequest.getShoppingCartId());
+        Item newItem = itemFactory.createItem(userId, itemNewRequest.getProductId(), shoppingCart, itemNewRequest.getName(),itemNewRequest.getDescription(),itemNewRequest.getPrice(), itemNewRequest.getQuantity());
+        shoppingCart.addItem(newItem);
+        return shoppingCartRepository.save(shoppingCart).toShoppingCartDto();
     }
 
     @Override

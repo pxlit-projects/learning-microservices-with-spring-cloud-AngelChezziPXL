@@ -15,20 +15,15 @@ import lombok.*;
 public class ItemNewRequest {
     @Positive
     private long productId;
+    @Positive
+    private long shoppingCartId;
     @NotNull
-    private Product product;
+    private String name;
     @NotNull
-    private ShoppingCart shoppingCart;
+    private String description;
+    @Positive
+    private double price;
     @Positive
     private int quantity;
 
-    public Item toItem(){
-        return Item.builder()
-                .id(null)
-                .productId(productId)
-                .product(product)
-                .shoppingCart(shoppingCart)
-                .quantity(quantity)
-                .build();
-    }
 }
