@@ -1,6 +1,6 @@
-package be.pxl.services.shoppingcart.domain;
+package be.pxl.services.whishlist.domain;
 
-import be.pxl.services.shoppingcart.domain.dto.ItemDto;
+import be.pxl.services.whishlist.domain.dto.ItemDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,13 +17,11 @@ public class Item {
     private Long id;
     @Column(unique = true, nullable = false)
     private Long productId;
+    private long shoppingCartId;
     private String name;
     private String description;
     private Double price;
     private int quantity;
-    @ManyToOne
-    private ShoppingCart shoppingCart;
-
 
     //Methods
     public double calculateLineTotal() {
@@ -42,7 +40,6 @@ public class Item {
                 .description(description)
                 .price(price)
                 .quantity(quantity)
-                .shoppingCartId(shoppingCart.getId())
                 .build();
     }
 }

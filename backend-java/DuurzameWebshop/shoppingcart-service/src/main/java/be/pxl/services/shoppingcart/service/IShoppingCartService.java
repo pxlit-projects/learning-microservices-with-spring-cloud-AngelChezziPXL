@@ -1,9 +1,7 @@
 package be.pxl.services.shoppingcart.service;
 
 
-import be.pxl.services.shoppingcart.domain.dto.ItemNewRequest;
-import be.pxl.services.shoppingcart.domain.dto.ProductResponse;
-import be.pxl.services.shoppingcart.domain.dto.ShoppingCartDto;
+import be.pxl.services.shoppingcart.domain.dto.*;
 
 import java.util.List;
 
@@ -15,7 +13,7 @@ public interface IShoppingCartService {
     ShoppingCartDto removeItemByItemId(long shoppincartId, long itemId);
     ShoppingCartDto doOrder(long shoppingcartId);
     ShoppingCartDto checkOut(long shoppingCartId);
-    void publishItemToWhishlist(long userId, long shoppingCartId);
+    void publishItemToWhishlist(long userId, long itemId);
 
     ShoppingCartDto getShoppingCartByUserId(long userId);
 }

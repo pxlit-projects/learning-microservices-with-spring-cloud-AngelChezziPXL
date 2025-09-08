@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(value = "whishlist-service", path = "/api/whishlist")
 public interface WhishListClient {
     @PostMapping
-    void publishToWhishList(@RequestBody ItemDto itemDto);
+    void publishToWhishList(long userId, @RequestBody ItemDto itemDto);
 }

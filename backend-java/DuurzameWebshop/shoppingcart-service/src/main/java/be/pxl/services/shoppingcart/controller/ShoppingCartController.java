@@ -91,12 +91,12 @@ public class ShoppingCartController {
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @PostMapping("/whishlist/{shoppingCartId}")
-    public void publishToWhishlist(@RequestHeader Map<String, String> headers, @PathVariable long shoppingCartId) {
+    @PostMapping("/whishlist/{itemId}")
+    public void AddToWhishlist(@RequestHeader Map<String, String> headers, @PathVariable long itemId) {
         LOG.info("Publishing shopping cart to whishlist.");
         checkAuthorization(headers);
         long userId = Long.parseLong(headers.get("user_id"));
-        shoppingCartService.publishItemToWhishlist(userId, shoppingCartId);
+        shoppingCartService.publishItemToWhishlist(userId, itemId);
     }
 
     //PRIVATE HELPER METHODS

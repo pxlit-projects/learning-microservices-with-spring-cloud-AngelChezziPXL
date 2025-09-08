@@ -12,7 +12,6 @@ import be.pxl.services.shoppingcart.exception.ResourceNotFoundException;
 import be.pxl.services.shoppingcart.repository.IItemRepository;
 import be.pxl.services.shoppingcart.repository.IShoppingCartRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,7 +59,10 @@ public class ShoppingCartService implements IShoppingCartService {
     {
         ShoppingCart shoppingCart = getShoppingCartFromDb(shoppinCartId);
         shoppingCart.removeItem(getItemFromDb(itemId));
-        return shoppingCartRepository.save(shoppingCart).toShoppingCartDto();
+        shoppingCart = getShoppingCartFromDb(shoppinCartId);
+        shoppingCart.removeItem(getItemFromDb(itemId));
+        shoppingCartRepository.save(shoppingCart);
+        return shoppingCart.toShoppingCartDto();
     }
 
 
@@ -81,7 +83,7 @@ public class ShoppingCartService implements IShoppingCartService {
     @Override
     public void publishItemToWhishlist(long userId, long itemId) {
         Item item = getItemFromDb(itemId);
-        whishListClient.publishToWhishList(item.toItemDto());
+        whishListClient.publishToWhishList(userId, item.toItemDto());
     }
 
     // PRIVATE HELPER METHODS

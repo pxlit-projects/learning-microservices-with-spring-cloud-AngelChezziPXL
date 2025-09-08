@@ -13,12 +13,17 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Whishlist {
+public class WhishList {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Transient
-    private List<Product> products;
+    private List<Item> items;
     private Long userId;
 
+    public void addItem(Item item) {
+        if(!items.contains(item)) {
+            items.add(item);
+        }
+    }
 }

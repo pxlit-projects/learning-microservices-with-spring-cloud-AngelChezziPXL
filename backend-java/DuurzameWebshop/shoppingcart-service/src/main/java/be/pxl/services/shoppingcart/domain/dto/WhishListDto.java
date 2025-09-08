@@ -5,5 +5,5 @@ import java.util.List;
 public class WhishListDto {
     private long id;
     private long userId;
-    private List<ProductDto> productDtoList;
+    private List<ItemDto> itemDtoList;
 }

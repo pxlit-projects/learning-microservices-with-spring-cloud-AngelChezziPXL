@@ -27,8 +27,8 @@ public class WhishlistController {
 
    @PostMapping
    @ResponseStatus(HttpStatus.CREATED)
-   public void addToWhishlist(@RequestBody ItemDto itemDto) {
-       System.out.println(itemDto);
+   public void addToWhishlist(long userId, @RequestBody ItemDto itemDto) {
+       wishlistService.AddItem(userId, itemDto);
    }
 
 
