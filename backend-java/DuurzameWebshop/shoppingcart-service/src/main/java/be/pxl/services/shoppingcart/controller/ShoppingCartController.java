@@ -65,7 +65,7 @@ public class ShoppingCartController {
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @PostMapping("/{shoppingCartId}")
+    @PostMapping("/order/{shoppingCartId}")
     public ShoppingCartResponse doOrder(@RequestHeader Map<String, String> headers, @PathVariable long shoppingCartId) {
         LOG.info("Conferming shopping cart order.");
         checkAuthorization(headers);
@@ -73,7 +73,7 @@ public class ShoppingCartController {
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @PutMapping("/{shoppingCartId}")
+    @PutMapping("/payment/{shoppingCartId}")
     public ShoppingCartResponse payOrder(@RequestHeader Map<String, String> headers, @PathVariable long shoppingCartId) {
         LOG.info("Checking out shopping cart.");
         checkAuthorization(headers);
@@ -86,18 +86,18 @@ public class ShoppingCartController {
         LOG.info("Publishing shopping cart to whishlist.");
         checkAuthorization(headers);
         long userId = Long.parseLong(headers.get("user_id"));
-        shoppingCartService.publishShoppingCartToWhishlist(userId, shoppingCartId);
+        shoppingCartService.publishItemToWhishlist(userId, shoppingCartId);
     }
 
     //PRIVATE HELPER METHODS
     private void checkAuthorization(Map<String, String> headers) {
         LOG.info("Checking authorization.");
-        String role = headers.get("role");
+        String role = headers.get("role") != null ? headers.get("role") : null;
         long userId = headers.get("user_id") != null ? Long.parseLong(headers.get("user_id")): 0;
-        if (!role.equalsIgnoreCase("admin")) {
-            LOG.debug("You are not authorized to access the logbook");
-            throw new AuthorizationException("You are not allowed to access this resource.");
-        }
+//        if (!role.equalsIgnoreCase("admin")) {
+//            LOG.debug("You are not authorized to access the logbook");
+//            throw new AuthorizationException("You are not allowed to access this resource.");
+//        }
 
         if(userId < 1) {
             LOG.debug("User id cannot be null");
