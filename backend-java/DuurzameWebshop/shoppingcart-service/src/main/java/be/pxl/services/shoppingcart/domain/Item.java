@@ -2,16 +2,14 @@ package be.pxl.services.shoppingcart.domain;
 
 import be.pxl.services.shoppingcart.domain.dto.ItemDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "shoppingCart")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,7 +40,7 @@ public class Item {
                 .productId(productId)
                 .name(name)
                 .quantity(quantity)
-                .shoppingCartDto(shoppingCart.toShoppingCartDto())
+                .shoppingCartId(shoppingCart.getId())
                 .build();
     }
 }

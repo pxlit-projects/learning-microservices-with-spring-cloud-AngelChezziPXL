@@ -30,14 +30,15 @@ public class ShoppingCartDto {
         return total;
     }
 
-    public ShoppingCart toShoppingCart() {
-        return ShoppingCart.builder()
-                .id(this.id)
-                .userId(this.userId)
-                .status(this.status)
-                .items(itemDtos.stream().map(ItemDto::toItem).collect(Collectors.toList()))
-                .build();
-    }
+//    public ShoppingCart toShoppingCart() {
+//        return ShoppingCart.builder()
+//                .id(this.id)
+//                .userId(this.userId)
+//                .status(this.status)
+//                .items(itemDtos.stream().map(ItemDto::toItem).collect(Collectors.toList()))
+//                .build();
+//    }
+    //TODO: Delete if not needed
 
     public ShoppingCartResponse toShoppingCartResponse() {
         return ShoppingCartResponse.builder()

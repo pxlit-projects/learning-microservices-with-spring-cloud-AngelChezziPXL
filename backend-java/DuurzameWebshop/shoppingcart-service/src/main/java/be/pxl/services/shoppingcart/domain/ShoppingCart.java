@@ -1,5 +1,6 @@
 package be.pxl.services.shoppingcart.domain;
 
+import be.pxl.services.shoppingcart.domain.dto.ItemDto;
 import be.pxl.services.shoppingcart.domain.dto.ShoppingCartDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,8 @@ public class ShoppingCart {
     private long userId;
     @Enumerated(EnumType.STRING)
     private ShoppingCartStatus status = ShoppingCartStatus.ACTIVE;
-    @OneToMany(mappedBy = "shoppingcart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Item> items = new ArrayList<>();
 
     //Methods
@@ -40,11 +42,16 @@ public class ShoppingCart {
     }
 
     public ShoppingCartDto toShoppingCartDto() {
+        List<ItemDto> itemDtos = new ArrayList<>();
+        for(Item item : items) {
+            itemDtos.add(item.toItemDto());
+        }
+
         return ShoppingCartDto.builder()
                 .id(id)
                 .userId(userId)
                 .status(status)
-                .itemDtos(items.stream().map(Item::toItemDto).toList())
+                .itemDtos(itemDtos)
                 .build();
     }
 

@@ -12,13 +12,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemResponse {
-    private Long id;
-    private Long productId;
+    private long id;
+    private long productId;
+    private long shoppingCartId;
     private String name;
     private String description;
-    private String categoryName;
-    private Boolean available;
-    private List<String> tags;
     private double price;
     private int quantity;
 
