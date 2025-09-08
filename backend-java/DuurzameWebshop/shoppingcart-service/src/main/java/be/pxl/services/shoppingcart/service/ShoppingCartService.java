@@ -34,6 +34,12 @@ public class ShoppingCartService implements IShoppingCartService {
     }
 
     @Override
+    public ShoppingCartDto getShoppingCartByUserId(long userId) {
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("User has not yet a shopping cart."));
+        return shoppingCart.toShoppingCartDto();
+    }
+
+    @Override
     public ShoppingCartDto createNewShoppingcart(long userId) {
         ShoppingCart newShoppinCart = ShoppingCart.createNew(userId);
         if (userHasShoppingCart(userId)) { throw new ConflictException("User already has shopping cart."); }
@@ -73,9 +79,9 @@ public class ShoppingCartService implements IShoppingCartService {
     }
 
     @Override
-    public void publishShoppingCartToWhishlist(long userId, long shoppingCartId) {
-        ShoppingCart shoppingCart = getShoppingCartFromDb(shoppingCartId);
-        whishListClient.publishToWhishList(shoppingCart.toShoppingCartDto().toShoppingCartResponse());
+    public void publishItemToWhishlist(long userId, long itemId) {
+        Item item = getItemFromDb(itemId);
+        whishListClient.publishToWhishList(item.toItemDto());
     }
 
     // PRIVATE HELPER METHODS
@@ -86,7 +92,7 @@ public class ShoppingCartService implements IShoppingCartService {
 
     private ShoppingCart getShoppingCartFromDb (long id){
         ShoppingCart shoppingCart = shoppingCartRepository.findById(id).orElse(null);
-        if(shoppingCart != null) {throw new ResourceNotFoundException("Shopping cart with id " + id + " not found.");}
+        if(shoppingCart == null) {throw new ResourceNotFoundException("Shopping cart with id " + id + " not found.");}
         return shoppingCart;
     }
 

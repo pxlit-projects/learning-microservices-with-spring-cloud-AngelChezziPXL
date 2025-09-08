@@ -15,5 +15,7 @@ public interface IShoppingCartService {
     ShoppingCartDto removeItemByItemId(long shoppincartId, long itemId);
     ShoppingCartDto doOrder(long shoppingcartId);
     ShoppingCartDto checkOut(long shoppingCartId);
-    void publishShoppingCartToWhishlist(long userId, long shoppingCartId);
+    void publishItemToWhishlist(long userId, long shoppingCartId);
+
+    ShoppingCartDto getShoppingCartByUserId(long userId);
 }

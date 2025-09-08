@@ -30,11 +30,21 @@ public class ShoppingCartController {
         return "Shoppingcart service is Ok";
     }
 
-    @GetMapping
+    @GetMapping("/product")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getAllProducts() {
         LOG.info("Fetching all products.");
         return shoppingCartService.getAllProducts();
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ShoppingCartResponse getShoppingCart(@RequestHeader Map<String, String> header) {
+        LOG.info("Fetching shoppingcart for current user.");
+        checkAuthorization(header);
+        long userId = Long.parseLong(header.get("user_id"));
+        ShoppingCartDto shoppingCartDto = shoppingCartService.getShoppingCartByUserId(userId);
+        return shoppingCartDto.toShoppingCartResponse();
     }
 
     @ResponseStatus(HttpStatus.OK)
